@@ -20,7 +20,12 @@ Die kritischsten Funde sind:
 
 Alle genannten Funde wurden **gelöscht, nicht auskommentiert**. Funktionalität der legitimen Module bleibt erhalten, wo sie offline möglich ist.
 
-**Aktueller Stand nach Entschärfung: Der Client ist zu 100 % offline.** Es existiert im gesamten Quellbaum **keine einzige** HTTP-, Socket-, WebSocket- oder sonstige Netzwerk-API mehr, und **keine einzige URL**.
+**Aktueller Stand nach Entschärfung: Der Client ist zu 100 % offline.** Es existiert im gesamten Quellbaum **keine einzige** HTTP-, Socket-, WebSocket- oder sonstige Netzwerk-API mehr, und **keine einzige URL mit Schema** (`http://`, `https://`, `ws://`, `wss://`, `ftp://`, `jdbc:`).
+
+> **Präzisierung aus der Zweitprüfung:** In der HUD-Editor-Vorschau steht ein Hostnamen-artiger
+> **Platzhalter-String** `play.example.net` (nur Anzeigetext, wird nie aufgelöst oder verbunden —
+> es existiert kein DNS-/Socket-Code). Außerdem liegt der Quellcode als **Teil-Port mit Stubs** vor,
+> nicht als vollständige Dekompilierung. Beides ist in **Abschnitt 9** dokumentiert.
 
 Der entschärfte Client wurde anschließend **erfolgreich gebaut** (`./gradlew build`, JDK 21.0.12,
 Gradle 9.2.1 → `dqrkis-b1.1.jar`) und die entstandene JAR **auf Bytecode-Ebene nachgeprüft**.
@@ -61,7 +66,13 @@ Fremd-JARs — Details in **Abschnitt 6**.
 
 ---
 
-## 3. Geprüfte Dateien (vollständig, 182)
+## 3. Geprüfte Dateien
+
+**Pass 1 (Erstprüfung): 182 Dateien** — der damalige Stand des Repositories.
+**Pass 2 (Zweitprüfung, Abschnitt 9): 202 Dateien** — der heutige Stand inkl. der in Pass 1
+hinzugefügten/entfernten Dateien (`AUDIT_REPORT.md`, `README.md`, `docs/verification/`,
+`scripts/`, entfallen: `logs/latest.log`, `utils/DiscordWebhook.java`).
+Die folgende Liste ist die vollständige Pass-1-Aufstellung.
 
 **Build & Konfiguration (9)**
 `build.gradle`, `settings.gradle`, `gradle.properties`, `gradlew`, `gradle/wrapper/gradle-wrapper.jar`, `gradle/wrapper/gradle-wrapper.properties`, `.gitignore`, `LICENSE`, `README.md`
@@ -286,8 +297,17 @@ fehlendes OpenAL-Gerät, `X11: Standard cursor shape unavailable`. Alle treten a
 2. **`src/main/resources/assets/dqrkis/icon.png` (und `font.ttf`) wurden nicht inhaltsgeprüft.**
    Ein PNG kann keine Schadlogik ausführen, aber theoretisch Steganografie enthalten. Eine Font-Datei (`.ttf`) wird ausschließlich über `Font.createFont`/`ImageIO` in `GlyphPage` verarbeitet – der eingesetzte Java-TrueType-Parser ist ein theoretisches, praktisch nicht relevantes Angriffsziel. Beide Dateien wurden nicht verändert.
 
-3. **Es sind keine natives Bibliotheken, keine obfuskierten Klassen und keine externen JARs mehr vorhanden.**
-   Der Quellcode liegt vollständig als lesbares Java vor – es gibt keine Blackbox-Bestandteile. Damit ist die Analyse grundsätzlich vollständig; es besteht kein „nicht analysierbarer“ Rest.
+3. **Keine natives Bibliotheken und keine externen JARs — aber auch keine vollständige Dekompilierung.**
+   Es sind **keine** `.dll`/`.so`/`.dylib` und **keine** eingebetteten Fremd-JARs vorhanden; der gesamte
+   ausgelieferte Code liegt als lesbares Java vor und ist oben byte-weise geprüft.
+   **Korrektur zur Erstfassung:** Die Aussage „der Quellcode liegt vollständig vor, es gibt keine
+   Blackbox-Bestandteile“ war **zu stark**. Der Baum ist ein **Teil-Port mit Stubs**: an mindestens
+   elf Stellen wurde Original-Logik durch Platzhalter ersetzt, und die dabei referenzierten
+   obfuskierten Original-Klassen (`Class768`, `Class1224`, `Class1619`, `Class1736`, `Class1916`)
+   sind **nicht im Repository** und damit **nicht überprüfbar** (Details: **Abschnitt 9.1**).
+   Für das gebaute Artefakt entsteht dadurch kein Risiko (gebaut wird ausschließlich dieser
+   Quellcode), aber die *Abdeckung* dieser Analyse ist entsprechend begrenzt — das wird hier
+   ausdrücklich nicht beschönigt.
 
 4. **Der Build wurde ausgeführt und war erfolgreich.**
    ```
@@ -339,3 +359,132 @@ fehlendes OpenAL-Gerät, `X11: Standard cursor shape unavailable`. Alle treten a
 | Täuscht der Client eine andere Mod vor? | **Nein**, die Metadaten sind bereinigt. |
 
 **Fazit: Der Client ist nach dieser Überarbeitung zu 100 % offline und frei von Schadcode-Fähigkeiten.**
+
+---
+
+## 9. Zweitprüfung (Pass 2) — was die Erstprüfung nicht gesehen hat
+
+**Anlass:** Zweiter, tieferer Durchgang mit Fokus auf Kategorien, die Pass 1 nur über Mustersuche
+oder gar nicht abgedeckt hatte. **Umfang:** alle **202** versionierten Dateien (Quellcode, Build,
+Ressourcen, Workflow, Skripte, Dokumentation).
+
+**Ergebnis in einem Satz:** Es wurde **kein weiterer Schadcode** gefunden — aber **fünf Befunde zur
+Genauigkeit und Integrität** des Audits selbst, von denen zwei die Erstfassung korrigieren.
+
+### 9.1 BEFUND P2-1 (HOCH — Audit-Integrität): Der Quellbaum ist ein Teil-Port mit Stubs
+
+An **elf Stellen** wurde Original-Logik durch Stubs/Platzhalter ersetzt. Die Kommentare verweisen
+dabei auf **obfuskierte Original-Klassennamen, die im Repository nicht existieren**:
+
+| Datei | Zeile | Kommentar / Referenz |
+|---|---|---|
+| `gui/components/settings/BlockSelectorBox.java` | 15–16, 42–43 | „Simplified popup for BlockSetSetting (**Class768**)… Full searchable grid (**Class1736**) is stubbed as next iteration“ |
+| `gui/components/settings/EnchantSelectorBox.java` | 14–15 | „Simplified popup for EnchantListSetting (**Class1916**)… Full searchable registry grid (**Class1224**) is next iteration“ |
+| `gui/HudEditorScreen.java` | 44, 45, 47, 61 | „In full 1:1 port this would write to **Class1619**'s x/y/z/A/B/… settings via `.a(double)`“ / „For **argon** HUD…“ |
+| `gui/components/settings/ItemSettingBox.java` | 35, 37 | „stub cycles for now“ / „could open a full ItemListWidget overlay; left as next iteration“ |
+| `gui/DqrkisClickGui.java` | 263, 294 | „bind flow would go here; stub“ / „StringEditing would open a text field overlay – stub“ |
+| `module/modules/misc/AutoShulker.java` | 72 | „(simplified placeholder)“ |
+
+**Konsequenz:** `Class768`, `Class1224`, `Class1619`, `Class1736`, `Class1916` sind **nicht im
+Repository**. Was diese Klassen im Original taten, ist **nicht überprüfbar** — sie wurden durch
+vereinfachte Neuimplementierungen ersetzt. Die Erstfassung hat daraus geschlossen, es gebe
+keine Blackbox-Bestandteile; das war falsch.
+
+**Bewertung:** Für das **gebaute Artefakt** kein Risiko — gebaut wird ausschließlich dieser
+Quellcode, und der ist geprüft. Aber: Die Analyse deckt *diesen* Port ab, **nicht** den
+obfuskierten Original-Client. Ausgesagte Sicherheit gilt für das Release, nicht für andere
+Builds/Distributionen (vgl. Lizenzhinweis im README).
+
+### 9.2 BEFUND P2-2 (MITTEL — Identitäts-Rückstand): Namespace „argon“
+
+```java
+// gui/…/font/GlyphPage.java:140
+textureId = Identifier.of("argon", "font/" + textureIndex);
+```
+
+Die Font-Textur wird unter der **fremden Namespace `argon`** registriert, nicht unter `dqrkis`.
+Dazu der Kommentar „For **argon** HUD…“ in `HudEditorScreen.java:45`. Der Client hieß offenbar
+ursprünglich *Argon*.
+
+**Bewertung:** Funktional harmlos (Texturen werden über `Identifier` in-memory registriert, der
+Client startet — im Laufzeitnachweis aus Abschnitt 6.2 bestätigt), aber:
+- Die Identitätsbereinigung aus Pass 1 (`fabric.mod.json`) war **unvollständig** — im Code läuft
+  weiter ein Fremd-Namespace.
+- Es ist ein Identitäts-Fingerabdruck und eine Inkonsistenz zum de-entfremdeten Metadaten-Satz.
+
+### 9.3 BEFUND P2-3 (NIEDRIG — Präzisionskorrektur): `play.example.net`
+
+```java
+// gui/HudEditorScreen.java:70
+context.drawText(textRenderer, Text.literal("Dqrkis | 120 FPS  45ms  play.example.net"), …);
+```
+
+Ein Hostnamen-artiger **Platzhalter-String** in der HUD-Editor-Vorschau. Der Pass-1-Scan suchte
+`https?://` und hat ihn daher nicht erfasst.
+
+**Bewertung:** **Kein** Netzwerkzugriff. Der String ist reiner Anzeigetext; im gesamten Baum
+existiert keine DNS-/Socket-API, die ihn verwenden könnte. Die Erstfassung („keine einzige URL“)
+war aber unscharf formuliert und ist oben korrigiert.
+
+### 9.4 BEFUND P2-4 (NIEDRIG — Hygiene): `Module implements Serializable`
+
+`module/Module.java:14` — die abstrakte Basisklasse aller 74 Module ist `Serializable`, obwohl im
+gesamten Projekt **keine** Serialisierung existiert (`ObjectInputStream` / `readObject` / `writeObject`
+= **0 Treffer**; die Konfiguration läuft über Gson auf einem `JsonObject`).
+
+**Bewertung:** Aktuell **keine Angriffsfläche**. Aber eine unnötige Markierung auf einer Klasse, die
+`MinecraftClient`- und `EventManager`-Referenzen hält — würde je Objekt-Deserialisierung
+eingeführt, wäre das eine klassische Deserialisierungs-Falle. **Empfehlung: `implements Serializable`
+entfernen** (rein kosmetisch, keine Verhaltensänderung).
+
+### 9.5 BEFUND P2-5 (INFO — Provenienz): kein Vertrauen aus der Historie
+
+Der komplette 202-Datei-Quellbaum kam in **einem einzigen Root-Commit** `a707fda` ins Repository —
+mit der Commit-Nachricht **„Update README.md“** (Autor `graph`), obwohl er das *gesamte* Projekt
+anlegt. Historie: nur 5 Commits, davon 4 aus diesem Audit.
+
+**Bewertung:** Kein Schadcode, aber: Es gibt **keine Datei-Historie** und Commit-Nachrichten sind
+als Audit-Spur **wertlos**. Vetrauen in diesen Code kann nur aus dem Inhalt stammen, nicht aus
+der Historie. Als einziges gelöschtes Artefakt der Historie existiert `DiscordWebhook.java`
+(durch diesen Audit entfernt) und `logs/latest.log` — **keine** in der Historie versteckten Dateien.
+
+### 9.6 Neu abgedeckt und **sauber** (in Pass 1 nicht explizit geprüft)
+
+| Kategorie | Prüfung | Ergebnis |
+|---|---|---|
+| **Versteckte Module** | 74 Moduldateien ↔ 74 Registrierungen in `ModuleManager` | **exakt gleich**, keine Waise, kein Duplikat |
+| | `hidden` / `isHidden` / Sichtbarkeitsflag im Modul-System | **existiert nicht** (Feld fehlt in `Module` vollständig) |
+| | Filter im ClickGUI (`DqrkisClickGui.getVisibleModules()`) | **nur** der Nutzer-Suchtext — kein Modul wird ausgeblendet |
+| **Mixin-Config ↔ Dateien** | `client.mixins.json` vs. `mixin/*.java` | 28 ↔ 28, **exakt**. Kein fehlender (Crash) und kein **nicht gelisteter/dormant** Mixin |
+| **Versteckte Chat-Commands** | Command-Parser, Präfix, `startsWith(".")`, `.ex`-Backdoors | **kein Command-Parser vorhanden** → Risiko gegenstandslos |
+| **Reflection** | `Class.forName`, `loadClass`, `defineClass`, `setAccessible` | **0**. Einzig: `DqrkisClickGui:194-195` ruft `getMethod("getValue"/"getItem").invoke(...)` als Fallback für Setting-Typen auf — konstante Namen, kein dynamisches Laden |
+| **AWT / Eingabe-Injection** | `Robot`, `Toolkit`, `Desktop`, Screen-Capture | **0** — `java.awt.*` wird **nur** für `Color` importiert |
+| **Clipboard** | Clipboard-Zugriff | nur Minecrafts eigenes `keyboard.getClipboard()/setClipboard()` im GUI-Textfeld (`StringBox:96,101`) = nutzerinitiiertes Copy/Paste |
+| **Datei-I/O** | alle Datei-APIs | **ausschließlich** `ProfileManager` (`config/dqrkis.json`). `ImageIO.write` in `GlyphPage:126` schreibt in einen `ByteArrayOutputStream` (**GPU-Textur**, keine Platte) |
+| **Threads / Scheduler** | `new Thread`, `Executors`, `Timer`, `ScheduledExecutor` | nur `PingSpoof` (`new Thread`+`sleep`), `MouseSimulation` (FixedPool(100)), `SelfDestruct` (`Thread.sleep`). **Kein** selbsttätig später auslösender Scheduler |
+| **Secrets** | `token`, `session`, `password`, `credential`, `apiKey`, `alt`, `hwid` | **keine** relevanten Treffer (nur `MIN_SESSION_MS`/`sessionStartMs` als Timer-Variable in `TunnelBaseFinder`) |
+| **Discord / IDs** | Snowflakes (17–20 Ziffern), `discord`, `@everyone`, `ghp_`, `sk-`, `AKIA`, `xox` | **0 Treffer** |
+| **`EncryptedString`** | alle Aufrufstellen inkl. Argumente | **alle** Argumente sind **Klartext-UI-Strings** (Modulnamen, Setting-Labels, Key-Namen) — nichts dekodiert zu URL/ID/Token ⇒ bestätigt reine Kosmetik |
+| **Netzwerk** | vollständiger Re-Scan | **0 Treffer** |
+| **Abhängigkeiten** | Zensus **aller** Importe im Projekt | nur erwartete Pakete. Zwei geprüft und harmlos: `org.objectweb.asm.Opcodes` **nur** als Mixin-`@At`-Opcode (`ClientPlayerInteractionManagerMixin:18`), `com.mojang.authlib.GameProfile` **nur** als Spiegel-Konstruktor-Parameter (`ClientPlayerEntityMixin:25`) — wird **nie gelesen, gespeichert oder gesendet** ⇒ **kein** Session-/Token-Zugriff |
+| **Paket-Hook** | `ClientConnectionMixin` | leitet Pakete **nur** an den Event-Bus weiter (cancellable), sendet selbst **nichts** nach außen |
+
+### 9.7 Verhaltenshinweis (kein Schwachpunkt, aber wissenswert)
+
+Der Client tippt **selbsttätig Server-Kommandos** (Chat-Kommandos des Spiels):
+`sell`, `ah sell <Preis>`, `order`, `shop`, `sethome`/`delhome`, `rtp <Region>`
+(`AutoSell`, `AhSell`, `AutoBoneOrder`, `AutoShulker`, `ShopBuyer`, `SilentHomeSetter`,
+`RtpBaseFinder`, `AuctionSniper`). Alle gehen **ausschließlich an den Minecraft-Server**, zu dem der
+Nutzer sich verbindet — innerhalb der Offline-Grenze. Es ist aber ein bewusstes Verhalten, das man
+kennen sollte, weil der Client damit **eigenständig Inhalte an den Server sendet**.
+
+### 9.8 Gesamtbewertung der Zweitprüfung
+
+- **Kein weiterer Schadcode, keine weitere Netzwerk-, Exfiltrations- oder Codeausführungsfähigkeit.**
+  Die Entschärfung aus Pass 1 hält.
+- **Zwei Korrekturen an der Erstfassung**, beide zu meinen Ungunsten formuliert und deshalb wichtig:
+  Der Quellbaum ist ein **Teil-Port mit Stubs** (nicht „vollständig“), und die
+  „keine URL“-Aussage brauchte eine Präzisierung.
+- **Ein offener Identitäts-Rückstand** (`argon`-Namespace) und **eine Hygiene-Empfehlung**
+  (`Serializable`). Beides ist **nicht** schadhaft.
+- **Alle** in Pass 1 als „clean“ gemeldeten Kategorien wurden unabhängig bestätigt.
