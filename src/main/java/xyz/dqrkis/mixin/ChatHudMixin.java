@@ -10,7 +10,16 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ChatHud.class)
 public class ChatHudMixin {
 
-	@ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/message/MessageSignatureData;Lnet/minecraft/chat/MessageIndicator;)V",
+	/**
+	 * Target signature for 1.21.11:
+	 * {@code ChatHud.addMessage(Text, MessageSignatureData, MessageIndicator)}.
+	 *
+	 * Both parameter types moved in this version. The old descriptor referenced
+	 * {@code net.minecraft.message.MessageSignatureData} and {@code net.minecraft.chat.MessageIndicator},
+	 * which no longer exist, so the injection target could not be resolved and the whole mixin
+	 * config (required = true) failed to apply.
+	 */
+	@ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
 			at = @At("HEAD"), ordinal = 0, argsOnly = true)
 	private Text dqrkis$modifyChatMessage(Text message) {
 		NameHider nameHider = NameHider.get();

@@ -73,6 +73,16 @@ Der vollständige Prüfbericht steht in **[AUDIT_REPORT.md](AUDIT_REPORT.md)**.
   die Mod-JAR einzubetten (war zum Prüfzeitpunkt leer).
 * `logs/latest.log` wurde aus der Versionskontrolle genommen.
 
+### 8. Mixin-Kompatibilität für 1.21.11 — korrigiert
+* `ChatHudMixin` zielte auf `ChatHud.addMessage(...)` mit einer Signatur, die in 1.21.11 nicht mehr
+  existiert: **beide Parametertypen wurden in andere Pakete verschoben**
+  (`net.minecraft.message.MessageSignatureData` → `net.minecraft.network.message.MessageSignatureData`,
+  `net.minecraft.chat.MessageIndicator` → `net.minecraft.client.gui.hud.MessageIndicator`).
+  Weil `client.mixins.json` `"required": true` setzt, konnte der Client daran scheitern.
+* Der Mixin verwendet jetzt die vollständige, gültige Descriptor-Signatur. Die Build-Warnung
+  `Cannot remap addMessage because it does not exist in any of the targets` ist verschwunden,
+  und der Mixin ist in der gebauten JAR statisch auf `class_338` / `method_44811` remappt.
+
 ---
 
 ## Was NICHT geändert wurde
@@ -100,6 +110,32 @@ normale Minecraft-Protokollschicht mit dem Server kommunizieren, zu dem der Nutz
 Zusätzlich entfernt: keine `ProcessBuilder`/`Runtime.exec`, kein `ClassLoader`/`defineClass`,
 kein `System.load`, keine Base64-/AES-/Cipher-Nutzung, keine Registry-/Autostart-/Task-Manipulation,
 keine `.bat`/`.sh`/`.vbs`/`.ps1`-Erzeugung, kein Schreibzugriff außerhalb des Spielordners.
+
+---
+
+## Nachweis: Der Client startet fehlerfrei
+
+Der Client wurde nach dem Audit **real gestartet** (headless in einem Xvfb-X-Server,
+`./gradlew runClient`, Skript: `scripts/capture-client-load.sh`):
+
+```
+[main/INFO] (FabricLoader) Loading 51 mods:
+	- dqrkis 1.2.11+1.21.11
+[main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_21
+[Render thread/INFO] (Minecraft) Setting user: Player789
+[Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, dqrkis, fabric, …
+```
+
+* **0** Mixin-Warnungen/Fehler im Log, **keine** Crash-Reports.
+* Das Hauptmenü wurde tatsächlich gerendert — belegt über die spieleigene F2-Screenshot-Funktion
+  und OCR der Titelseiten-Elemente:
+  `Minecraft 1.21.11/Fabric (Modded)`, `Copyright Mojang AB. Do not distribute!`,
+  `Singleplayer`, `Multiplayer`, `Minecraft Realms`, `Options...`.
+  Bild: [`docs/verification/title-screen.png`](docs/verification/title-screen.png)
+
+Die verbleibenden Log-Fehler (`Status: 401` Offline-Auth, Realms-Auth, fehlendes `libflite`,
+kein OpenAL-Gerät) sind reine Container-Artefakte ohne echten Minecraft-Account bzw. ohne
+Audio-/Grafik-Hardware. Sie treten auch ohne diese Mod auf.
 
 ---
 
