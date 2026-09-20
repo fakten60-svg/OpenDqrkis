@@ -16,7 +16,16 @@ Minecraft-Clients *Dqrkis* (Fabric, Minecraft 1.21.11, Java 21).
 kommerziell vertrieben und war obfuskiert. Dieses Repository enthält eine entpackte,
 nachvollziehbare Java-Quellcode-Version, aus der **alle Schadcode-Fähigkeiten entfernt** wurden.
 
-Der vollständige Prüfbericht steht in **[AUDIT_REPORT.md](AUDIT_REPORT.md)**.
+Der vollständige Prüfbericht steht in **[AUDIT_REPORT.md](AUDIT_REPORT.md)** — inklusive der
+**Zweitprüfung (Abschnitt 9)**, die zwei Aussagen der Erstfassung korrigiert.
+
+> **Ehrliche Einordnung:** Dieser Baum ist ein **Teil-Port mit Stubs**, *keine* vollständige
+> Dekompilierung. An elf Stellen wurde Original-Logik durch Platzhalter ersetzt
+> (`BlockSelectorBox`, `EnchantSelectorBox`, `HudEditorScreen`, `ItemSettingBox`,
+> `DqrkisClickGui`, `AutoShulker`). Die dort referenzierten obfuskierten Original-Klassen
+> (`Class768`, `Class1224`, `Class1619`, `Class1736`, `Class1916`) liegen **nicht** im Repository
+> und sind damit **nicht überprüfbar**. Die Aussagen dieses Audits gelten deshalb für **genau
+> dieses Release** — nicht für andere Builds oder Distributionen des Clients.
 
 ---
 
