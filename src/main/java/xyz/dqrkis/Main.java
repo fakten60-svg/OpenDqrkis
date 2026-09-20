@@ -2,14 +2,13 @@ package xyz.dqrkis;
 
 import net.fabricmc.api.ModInitializer;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
+/**
+ * Fabric entrypoint. No network access, no remote code loading: this only constructs
+ * the client singleton.
+ */
 public final class Main implements ModInitializer {
 	@Override
 	public void onInitialize() {
-		try {
-			new Dqrkis();
-		} catch (InterruptedException | IOException ignored) {}
+		new Dqrkis();
 	}
 }

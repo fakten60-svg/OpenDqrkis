@@ -1,11 +1,32 @@
-run
-.idea
-.gradle
-build
-.env
-/client/**/interface.zip
+# Gradle / build output
+build/
+.gradle/
+target/
+out/
+lib/
+
+# Minecraft run directory and logs
+run/
+logs/
 client/launcher.log
-imgui.ini
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.classpath
+.project
+.settings/
+
+# Local configuration and secrets
+.env
+.env.local
 admin-tools-config.json
+imgui.ini
+/client/**/interface.zip
+
+# OS noise
 .DS_Store
-out
+Thumbs.db

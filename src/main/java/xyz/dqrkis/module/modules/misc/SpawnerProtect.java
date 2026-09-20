@@ -6,9 +6,7 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.module.setting.StringSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.DiscordWebhook;
 import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.KeyUtils;
@@ -57,8 +55,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import org.lwjgl.glfw.GLFW;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,10 +70,6 @@ public final class SpawnerProtect extends Module implements TickListener {
 
     private final BooleanSetting fastMode = new BooleanSetting(EncryptedString.of("Fast Mode"), true);
     private final NumberSetting emergencyDistance = new NumberSetting(EncryptedString.of("Emergency Distance"), 1, 50, 5, 0.5);
-    private final BooleanSetting webhookEnabled = new BooleanSetting(EncryptedString.of("Webhook"), false);
-    private final StringSetting webhookUrl = new StringSetting(EncryptedString.of("Webhook URL"), "");
-    private final BooleanSetting selfPing = new BooleanSetting(EncryptedString.of("Self Ping"), false);
-    private final StringSetting discordId = new StringSetting(EncryptedString.of("Discord ID"), "");
 
     private State state = State.CHECKING;
     private final List<BlockPos> foundSpawners = new ArrayList<>();
@@ -118,17 +110,13 @@ public final class SpawnerProtect extends Module implements TickListener {
 
     private final BooleanSetting fastModeSetting = fastMode;
     private final NumberSetting emergencyDistSetting = emergencyDistance;
-    private final BooleanSetting webhookEnabledSetting = webhookEnabled;
-    private final StringSetting webhookUrlSetting = webhookUrl;
-    private final BooleanSetting selfPingSetting = selfPing;
-    private final StringSetting discordIdSetting = discordId;
 
     public SpawnerProtect() {
         super(EncryptedString.of("Spawner Protect"),
                 EncryptedString.of("Breaks all spawners around you when players are nearby and dumps your inventory in an e-chest"),
                 -1,
                 Category.MISC);
-        addSettings(fastMode, emergencyDistance, webhookEnabled, webhookUrl, selfPing, discordId);
+        addSettings(fastMode, emergencyDistance);
     }
 
     @Override
@@ -541,22 +529,10 @@ public final class SpawnerProtect extends Module implements TickListener {
             double range = emergencyDistSetting.getValue();
             for (PlayerEntity player : mc.world.getPlayers()) {
                 if (player == mc.player || player.isSpectator()) continue;
-                if (player.getName().getString().equalsIgnoreCase("venom")) continue;
 
                 double dist = mc.player.distanceTo(player);
                 if (dist <= range) {
                     sendEmergencyAlert(player.getName().getString(), dist);
-                    if (webhookEnabledSetting.getValue() && !webhookUrlSetting.getValue().trim().isEmpty()) {
-                        String ping = "";
-                        if (selfPingSetting.getValue() && !discordIdSetting.getValue().trim().isEmpty()) {
-                            ping = "<@" + discordIdSetting.getValue().trim() + "> ";
-                        }
-                        new DiscordWebhook(webhookUrlSetting.getValue())
-                                .title("Player Detected!")
-                                .description("A player was detected near spawners")
-                                .attach(Path.of("")) // no attachment
-                                .sendAsync();
-                    }
                     playerDetected = true;
                     return;
                 }

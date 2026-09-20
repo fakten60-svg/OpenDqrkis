@@ -11,10 +11,6 @@ import xyz.dqrkis.utils.rotation.RotatorManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.*;
-
 @SuppressWarnings("all")
 public final class Dqrkis {
 	public RotatorManager rotatorManager;
@@ -31,10 +27,8 @@ public final class Dqrkis {
 	public DqrkisClickGui dqrkisClickGui;
 	public TabGui tabGui;
 	public Screen previousScreen = null;
-	public long lastModified;
-	public File dqrkisJar;
 
-	public Dqrkis() throws InterruptedException, IOException {
+	public Dqrkis() {
 		INSTANCE = this;
 		this.eventManager = new EventManager();
 		this.moduleManager = new ModuleManager();
@@ -46,7 +40,6 @@ public final class Dqrkis {
 		this.friendManager = new FriendManager();
 
 		this.getProfileManager().loadProfile();
-		this.setLastModified();
 
 		this.guiInitialized = false;
 		mc = MinecraftClient.getInstance();
@@ -80,19 +73,7 @@ public final class Dqrkis {
 		return tabGui;
 	}
 
-	public void resetModifiedDate() {
-		this.dqrkisJar.setLastModified(lastModified);
-	}
-
 	public String getVersion() {
 		return version;
-	}
-
-	public void setLastModified() {
-		try {
-			this.dqrkisJar = new File(Dqrkis.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-			// Comment out when debugging
-			this.lastModified = dqrkisJar.lastModified();
-		} catch (URISyntaxException ignored) {}
 	}
 }
