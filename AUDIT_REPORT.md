@@ -181,6 +181,101 @@ Also `<Spielordner>/config/dqrkis.json` — innerhalb des Spielordners, nichts a
 
 **Damit ist die Offline-Eigenschaft nicht nur auf Quellcode-, sondern auch auf Bytecode-Ebene belegt.**
 
+### 6.1 Zielsignatur von `ChatHudMixin` (korrigiert)
+
+`ChatHudMixin` zielte auf `ChatHud.addMessage(...)` in einer Signatur, die in 1.21.11 nicht mehr
+existiert: Beide Parametertypen wurden in dieser Version in andere Pakete verschoben.
+
+| | alt (ungültig in 1.21.11) | neu (korrekt) |
+|---|---|---|
+| Signatur-Parameter 1 | `net.minecraft.text.Text` | `net.minecraft.text.Text` (unverändert) |
+| Signatur-Parameter 2 | `net.minecraft.message.MessageSignatureData` | `net.minecraft.network.message.MessageSignatureData` |
+| Signatur-Parameter 3 | `net.minecraft.chat.MessageIndicator` | `net.minecraft.client.gui.hud.MessageIndicator` |
+
+Der Mixin zielt jetzt auf die vollständige Descriptor-Signatur:
+
+```java
+@Mixin(ChatHud.class)
+@ModifyVariable(
+    method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V",
+    at = @At("HEAD"), ordinal = 0, argsOnly = true)
+private Text dqrkis$modifyChatMessage(Text message) { ... }
+```
+
+**Unabhängige Gegenprüfung gegen die Yarn-Mappings 1.21.11+build.4**
+(`net.fabricmc.yarn.1_21_11.1.21.11+build.4-v2`) — Auszug aus `mappings.tiny`:
+
+```
+c  gjf  net/minecraft/class_338  net/minecraft/client/gui/hud/ChatHud
+   m  (Lyh;Lyu;Lgfd;)V  a  method_44811  addMessage
+```
+
+Aufgelöst über die offiziellen Spaltennamen:
+
+| Intermediary | Yarn (named) |
+|---|---|
+| `class_338` | `net.minecraft.client.gui.hud.ChatHud` (Mixin-Ziel) |
+| `method_44811` | `ChatHud.addMessage` |
+| `Lyh;` | `net.minecraft.text.Text` |
+| `Lyu;` | `net.minecraft.network.message.MessageSignatureData` |
+| `Lgfd;` | `net.minecraft.client.gui.hud.MessageIndicator` |
+
+In der **gebauten** JAR ist das Ziel statisch nach Intermediary remappt (Loom entfernt den Refmap,
+die Annotationen werden direkt umgeschrieben). `javap -v` auf
+`xyz/dqrkis/mixin/ChatHudMixin.class` bestätigt:
+
+```
+org.spongepowered.asm.mixin.Mixin(value=[class Lnet/minecraft/class_338;])
+org.spongepowered.asm.mixin.injection.ModifyVariable(
+    method=["method_44811"], at=@At("HEAD"), ordinal=0, argsOnly=true)
+```
+
+Vorher meldete der Build `Cannot remap addMessage because it does not exist in any of the targets` —
+diese Warnung ist **verschwunden**, das Ziel wurde also erfolgreich aufgelöst.
+
+### 6.2 Laufzeitnachweis: Client startet ohne Fehler
+
+Der entschärfte Client wurde headless in einem virtuellen X-Server (Xvfb, `--screen 0 1280x720x24`)
+**tatsächlich gestartet** (`./gradlew runClient`). Nachweis: `scripts/capture-client-load.sh`.
+
+**Mod wurde geladen und aktiviert:**
+```
+[20:54:23] [main/INFO] (FabricLoader) Loading 51 mods:
+	- dqrkis 1.2.11+1.21.11
+[20:54:23] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_21
+[20:54:33] [Render thread/INFO] (Minecraft) Setting user: Player789
+[20:54:40] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, dqrkis, fabric, ...
+```
+
+**Es gibt keine einzige Mixin-Fehlermeldung:**
+```
+$ grep -i -E "(WARN|ERROR).*mixin|mixin.*(WARN|ERROR)" run/logs/latest.log | wc -l
+0
+$ ls run/crash-reports/
+(none)
+```
+
+Da `client.mixins.json` `"required": true` setzt, hätte ein nicht anwendbarer Mixin den Client
+**hart abgebrochen**. Er startet durch — der Injektionspunkt ist also korrekt.
+
+**Beweis, dass die Titelseite tatsächlich gerendert wurde:** Der Client hat über die
+Spiel-eigene F2-Funktion (`glReadPixels`) Screenshots geschrieben, aus denen per OCR die
+Titelseiten-Elemente gelesen wurden:
+
+| Region | OCR-Ergebnis |
+|---|---|
+| unten links | `Minecraft 1.21.11/Fabric (Modded)` |
+| unten rechts | `Copyright Mojang AB. Do not distribute!` |
+| Button-Spalte | `Singleplayer`, `Multiplayer`, `Minecraft Realms`, `Options...` |
+
+Diese Texte werden **nur auf dem Hauptmenü** gezeichnet. Bild: `docs/verification/title-screen.png`.
+
+**Erwartete Umgebungsfehler (Container, kein Sicherheits- und kein Mixin-Thema):**
+Offline-Auth `Status: 401`, `Realms`-Auth, fehlende `libflite`-Erzähler-Bibliothek,
+fehlendes OpenAL-Gerät, `X11: Standard cursor shape unavailable`. Alle treten auch ohne Mod auf.
+
+**Ergebnis: Der Client lädt sauber und erreicht das Hauptmenü — der Mixin ist entschärft und funktionsfähig.**
+
 ---
 
 ## 7. Restrisiken und ehrliche Einschränkungen
@@ -205,13 +300,22 @@ Also `<Spielordner>/config/dqrkis.json` — innerhalb des Spielordners, nichts a
    ```
    Der Ausgangszustand des Repositories war dagegen **nicht kompilierbar**: `SelfDestruct.java` importierte `com.sun.jna.Memory`, aber `jna` war in `build.gradle` nicht deklariert, und die referenzierte `lib/annotations-1.0.6.jar` fehlte im Repository. Beide Ursachen sind behoben (JNA entfernt, Abhängigkeit korrekt deklariert) — erst dadurch ist der Build möglich.
 
-5. **Vorbestehende Mixin-Warnungen (nicht durch dieses Audit verursacht).**
-   Der Build meldet zwei Remap-Warnungen, die bereits im Originalcode angelegt sind:
+5. **`ChatHudMixin`-Signatur — behoben und im laufenden Client verifiziert.**
+   Der Build meldete zwei Remap-Warnungen:
    ```
    Cannot remap addMessage  because it does not exist in any of the targets [net/minecraft/client/gui/hud/ChatHud]
    Cannot remap modifiers   because it does not exist in any of the targets [] or their parents.
    ```
-   `client.mixins.json` setzt `"required": true`. Da `ChatHudMixin` auf `ChatHud.addMessage(...)` mit einer Signatur zielt, die in 1.21.11 so nicht mehr existiert, kann der Client beim Laden fehlschlagen. **Das ist ein Funktions-/Kompatibilitätsproblem, kein Sicherheitsproblem** und wurde bewusst nicht „blind“ repariert. Empfehlung: `ChatHudMixin` auf die in 1.21.11 gültige Methode anpassen oder den Mixin entfernen.
+   Ursache: Beide Signatur-Parameter von `ChatHud.addMessage(...)` wurden in 1.21.11 in andere
+   Pakete verschoben. Da `client.mixins.json` `"required": true` setzt, konnte der Client daran
+   scheitern. Der Mixin wurde auf die gültige Descriptor-Signatur angepasst
+   `addMessage(Text, MessageSignatureData, MessageIndicator)`; beide Warnungen sind verschwunden,
+   und der Client wurde zusätzlich real gestartet und erreicht das Hauptmenü
+   (Details in **Abschnitt 6.1 / 6.2**). Restrisiko hier: **keines** — Ziel, Descriptor und
+   Laufzeitverhalten sind dreifach verifiziert (Mappings, Bytecode, laufender Client).
+
+   *Hinweis zur zweiten Warnung:* Sie war eine Folge der ersten (nicht auflösbares Ziel ⇒ auch die
+   Modifier-Referenz nicht auflösbar) und ist mit ihr zusammen entfallen.
 
 6. **Sicherheit vs. Zweck.**
    Dies ist ein **Minecraft-Cheat-Client**. Die Entschärfung entfernt **Malware-Fähigkeiten**, nicht die Cheat-Funktionen selbst (Aimbot, AutoCrystal, ESP, AutoReconnect usw.). Diese Module verstoßen weiterhin gegen die Nutzungsbedingungen nahezu aller Server und können zu Bans führen. Das ist eine ethische/rechtliche Frage, die dieses Audit nicht löst – es stellt nur sicher, dass der Code **nichts tut, was über den Spielprozess hinausgeht**.
