@@ -614,3 +614,89 @@ Grenze (wie bereits in Abschnitt 7 angemerkt): Das Harness lief am **Hauptmenü 
 Damit bewiesen ist die Konstruktion, die Hook-/Listener-Registrierung und der saubere
 Enable/Disable-Pfad jedes Moduls — **nicht** die taktische Spielwirkung im Live-Einsatz (z. B.
 Kampf-Timings gegen echte Gegner), die headless nicht prüfbar ist.
+
+## 12. Fünfter Durchgang (Pass 5) — vollständiger Re-Review (2026-09-21)
+
+Anlass: Auftrag für eine erneute, vollständige Sicherheitsprüfung über alle 180 Java-Dateien
+(~17.300 LOC) samt Build-, CI- und Ressourcen-Dateien — und gleichzeitige Aufwertung des
+Repositorys (Screenshots, README, Security-Policy).
+
+### 12.1 Methodik
+
+- **16 Muster-Sweeps** über `src/main/java` (alle 180 Dateien): URLs, `java.net`/HttpClient/Socket/
+  WebSocket, `Runtime.exec`/`ProcessBuilder`, `defineClass`/`URLClassLoader`/`loadClass`/`Unsafe`/
+  `ScriptEngine`, Reflection (`setAccessible`, `Class.forName`), `System.load`, Base64/Cipher/
+  MessageDigest, `System.getProperty`/`getenv`, Clipboard/Robot, Discord/Webhook/Telegram/Token-
+  Begriffe, Datei-Schreibzugriffe, Thread/Timer-Erzeugung, `Serializable`, versteckte Chat-Commands,
+  UUID-/Namen-Sonderfälle.
+- **Komplette Lektüre** der sicherheitsrelevanten Klassen: `Main`, `Dqrkis`, `ModuleManager`,
+  `ProfileManager`, `FriendManager`, `EventManager`, `ConnectScreenMixin`, `PingSpoof`,
+  `MinecraftClientMixin` sowie Spot-Checks aller Modulkategorien.
+- **Ressourcen:** `fabric.mod.json`, `client.mixins.json` (28 Einträge vs. 28 Mixin-Klassen —
+  exakt), `icon.png` (valides 512×512-PNG), `font.ttf` (valider TrueType-Header),
+  `gradle-wrapper.jar`, `gradle-wrapper.properties`, `build.gradle`, `settings.gradle`,
+  `gradle.properties`, `.github/workflows/gradle.yml`.
+
+### 12.2 Ergebnis der Sweeps (alle 16 Kategorien)
+
+| # | Kategorie | Treffer | Bewertung |
+|---|---|---|---|
+| 1 | URLs (`http/https/wss/ftp`) | **0** | — |
+| 2 | `java.net`, HttpClient, Socket, WebSocket | **0** | — |
+| 3 | `Runtime.exec`, `ProcessBuilder` | **0** | — |
+| 4 | `defineClass`, `URLClassLoader`, `Unsafe`, `ScriptEngine` | **0** | — |
+| 5 | Reflection (`setAccessible`, `Class.forName`, …) | **0** | — |
+| 6 | `System.load` / `loadLibrary` | **0** | — |
+| 7 | Base64 / Cipher / MessageDigest / SecureRandom | **0** | — |
+| 8 | `System.getProperty` / `getenv` | **0** | — |
+| 9 | Clipboard / Robot / Screenshot | 2 | `StringBox` (GUI-Textfeld): Kopieren/Einfügen des eigenen Setting-Werts — Standard-GUI-Verhalten |
+| 10 | Discord/Webhook/Telegram/Token/Cookie | 2 | `ConnectScreenMixin`: Parameter `CookieStorage` ist Teil der 1.21.11-Signatur von `ConnectScreen.connect` (Fehlalarm, siehe 10.1) |
+| 11 | Datei-Schreibzugriffe | 1 | ausschließlich `ProfileManager` → `.minecraft/config/dqrkis.json` |
+| 12 | Thread-/Timer-Erzeugung | TimerUtils-Helfer + 1× `new Thread` in `PingSpoof` | sendet nur verzögerte KeepAlive-Antworten an den verbundenen MC-Server — erlaubte Protokollschicht |
+| 13 | `Serializable` | 1 | `Module implements Serializable` (markiert, kein Serialisierungspfad) — dokumentierte Hygiene-Notiz |
+| 14 | versteckte Chat-Commands | 0 | `sendChatCommand` nur in Spielmodulen mit sichtbarem Nutzerzweck (`rtp …`, `sell`, `home`) |
+| 15 | UUID-/Namen-Sonderfälle | 0 | UUIDs nur für Player-Liste/Rang-Abfragen, keine Vergleiche gegen feste Werte |
+| 16 | Build-/CI-/Wrapper-Kette | **1 Befund** | siehe 12.3 |
+
+### 12.3 Befund: veralteter Gradle-Wrapper (behoben)
+
+Der mitgelieferte `gradle/wrapper/gradle-wrapper.jar` (43.462 Bytes,
+SHA-256 `d3b261c2820e9e3d8d639ed084900f11f4a86050a8f83342ade7b6bc9b0d2bdd`) war **nicht** der
+canonische Wrapper der in `gradle-wrapper.properties` angegebenen Distribution 9.2.1
+(45.633 Bytes, `423cb469ccc0ecc31f0e4e1c309976198ccb734cdcbb7029d4bda0f18f57e8d9` — verifiziert
+über zwei unabhängige Referenzen: GitHub-Tag `gradle/v9.2.1` und der von der lokalen, per
+SHA-256-validierten 9.2.1-Distribution generierte Wrapper; beide byte-identisch).
+
+- **Klassenset-Analyse:** der Repo-Wrapper enthielt das 8.x-Layout (`SystemPropertiesHandler`,
+  `ExclusiveFileAccessManager` im alten Paket) — die 9.x-Version nutzt `PropertiesFileHandler` bzw.
+  `org.gradle.internal.file.locking`. Der Befund ist damit ein **veralteter Wrapper**, keine
+  Manipulation: Das JAR enthält **keine** Netzwerk-Endpunkte (String-Scan: nur die Apache-Lizenz-URL
+  im beiliegenden LICENSE-Text) und lädt ausschließlich die in `gradle-wrapper.properties`
+  angegebene offizielle `services.gradle.org`-Distribution.
+- **Maßnahme:** ersetzt durch den byte-kanonischen 9.2.1-Wrapper (`423cb469…`).
+- **Bewertung:** Schweregrad **niedrig** (Hygiene/Supply-Chain-Konsistenz; kein aktiver Schaden —
+  die Distribution wurde ohnehin von services.gradle.org bezogen).
+
+### 12.4 Zusätzliche Hygiene-Maßnahmen (Repository-Pflege)
+
+- Unprofessioneller Kommentar in `Dqrkis.java` (persönliche Beleidigung des Original-Autors)
+  durch neutralen Hinweis ersetzt — reiner Quell-Kommentar, **keine** Bytecode-Änderung.
+- `scripts/capture-client-load.sh`: optionaler `CAPTURE_CLICKGUI=1`-Modus für GUI-Nachweise.
+- `docs/screenshots/` (Titelbildschirm + ClickGUI aus dem geprüften Build), überarbeitetes
+  `README.md`, neue `SECURITY.md` (Reporting-Weg via GitHub Security Advisories).
+
+### 12.5 Verifikation nach Pass 5
+
+| Prüfung | Ergebnis |
+|---|---|
+| `./gradlew build` (JDK 21) | **BUILD SUCCESSFUL**, 0 Fehler, 0 Warnungen |
+| JAR-Hash nach dem Kommentar-Fix | **unverändert** `7501719d056c1d8134212312fce28b6bc550299374e29dbab416c4a69599d430` (Kommentar erzeugt keinen Bytecode) |
+| Headless-Launch (Xvfb) + F2-Screenshots | Client geladen, Titelbildschirm **und** ClickGUI gerendert, 0 Mixin-Fehler, 0 Crash-Reports |
+| Wrapper | `gradle-wrapper.jar` == kanonischer 9.2.1-Wrapper (`423cb469…`) |
+
+### 12.6 Gesamtbewertung Pass 5
+
+Der vollständige Re-Review bestätigt das Ergebnis der Pässe 1–4: **kein Netzwerk-Code, keine
+Code-Ausführung, keine Verschleierung, keine versteckte Logik** im gesamten Quellbaum. Der einzige
+neue Befund (veralteter Wrapper) wurde behoben; zwei Fehlalarme (Cookie-Parameter, GUI-Clipboard)
+sind dokumentiert. Die Offline-Garantie (Abschnitt 8) gilt unverändert.
