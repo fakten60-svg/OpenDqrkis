@@ -163,8 +163,7 @@ dqrkis-b1.1-sources.jar
 
 Die Prüfsumme ist im
 [Audit-Report (§10.3)](AUDIT_REPORT.md) dokumentiert — vergleiche sie nach dem Download
-(`sha256sum dqrkis-b1.1.jar`). Denselben Build gibt es auch **direkt im Repository** unter
-[`releases/`](releases/) (inkl. `releases/README.md` mit Prüfsummen und Herkunft).
+(`sha256sum dqrkis-b1.1.jar`).
 
 ## 🛠️ Selbst bauen
 
