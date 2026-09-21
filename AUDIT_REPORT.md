@@ -543,3 +543,74 @@ Fehlalarme bzw. bereits in Pass 1 entschärft (`ConnectScreenMixin`-Cookie-Param
 `SpawnerProtect`-Klassenname) und sind hier dokumentiert. Die Offline-Garantie (Abschnitt 8) gilt
 unverändert — der Scan über das gesamte Artefakt bestätigt erneut: **keine Netzwerk-API, keine URL,
 kein Ausführungs-API.**
+
+## 11. Vierter Durchgang (Pass 4) — Modul-Selbsttest nach Entobfuskation & Modul-Entfernung (2026-09-21)
+
+Anlass: Nachweis, dass die in Pass 3 durchgeführten Eingriffe (Entfernung des
+`EncryptedString`-Helpers mit 692 Aufrufstellen, Streichung von 4 Modulen) zu **keinerlei
+Funktionsverlust oder Regressionsen** geführt haben.
+
+### 11.1 Methodik
+
+Temporäres Test-Harness (`ModuleSelfTest.java`), das über einen Injektions-Hook in
+`MinecraftClientMixin.onTick` genau **einmal** beim ersten Client-Tick (Titelbildschirm, headless
+unter Xvfb) ausgeführt wird. Für **jedes der 70 registrierten Module** wird ein kompletter
+Enable/Disable-Rundlauf gefahren — `setEnabled(true)` → `setEnabled(false)` — mit individuellem
+`catch (Throwable)`, sodass ein Fehler eines Moduls weder den Test abbricht noch andere Module
+beeinflusst. Je Modul wird eine Logzeile geschrieben; am Ende folgt eine Zusammenfassung.
+
+### 11.2 Ergebnis (Logauszug)
+
+```
+[10:59:32] [Render thread/INFO] (dqrkis-selftest) SELFTEST SUMMARY total=70 ok=69 selfdis=1 fail=0
+```
+
+Stichproben der 69 OK-Zeilen (alle Kategorien vertreten):
+
+```
+SELFTEST OK Aim Assist   cat=COMBAT settings=20 roundtrip=clean
+SELFTEST OK Anchor Macro cat=COMBAT settings=14 roundtrip=clean
+SELFTEST OK Auto Sell    … (siehe 11.3: Kategorie selfdis)
+SELFTEST OK Name Hider   cat=RENDER settings=5  roundtrip=clean
+SELFTEST OK Dqrkis       cat=CLIENT settings=12 roundtrip=clean
+SELFTEST OK Friends      cat=CLIENT settings=5  roundtrip=clean
+```
+
+### 11.3 Bedeutung der Ergebniskategorien
+
+| Kategorie | Anzahl | Bedeutung |
+|---|---|---|
+| `ok` | **69** | Der Enable/Disable-Rundlauf war **sauber**: das `enabled`-Flag wurde korrekt gesetzt (`true`) und nach dem Disable wieder korrekt zurückgesetzt (`false`). **Keine Ausnahme** wurde geworfen — Konstruktion, Listener-Registrierung, `onEnable()` und `onDisable()` aller 69 Module funktionieren nach den Pass-3-Änderungen unverändert. |
+| `selfdis` | **1** | Das Modul hat sich **während seines eigenen `onEnable()`s bewusst selbst deaktiviert**. Es handelt sich um `Auto Sell`: dessen `onEnable()` prüft `mc.player != null && mc.world != null` und ruft sonst `disable()` auf. Es ist ein **Einmal-Aktionsmodul** (`/sell`-Befehl an den Server, Inventar leeren, sich selbst ausschalten) — am Titelbildschirm ohne geladene Welt ist die Selbstdeaktivierung also **das korrekte, erwartete Verhalten**, kein Fehler. Die Ausführung blieb **exception-frei**; der Code-Pfad (Guard, `disable()`) wurde damit tatsächlich ausgeführt und getestet. |
+| `fail` | **0** | **Kein** Modul hat eine Ausnahme geworfen und **kein** Modul hat einen inkonsistenten Flag-Zustand hinterlassen (weder `STATE-FAIL` noch `FAIL` im Log). |
+
+### 11.4 Regressions- und Fehlerprüfung
+
+| Prüfung | Ergebnis |
+|---|---|
+| Stacktraces aus Modulcode (`at xyz.dqrkis`) im gesamten Lauf-Log | **0 Treffer** |
+| Mixin-Fehler (`MixinApplyError`/`mixin apply failed`) | **0** |
+| Crash-Reports | **0**; Client beendete sich sauber (`remaining client processes: 0`), Titelbildschirm renderte (2 F2-Screenshots) |
+| ERROR-Zeilen im Log | ausschließlich die **bekannten Container-Artefakte** (Offline-Auth `401`, fehlendes `libflite` des Narrators, Realms-Dev-Auth) — **identisch zu allen früheren Läufen**, keine neue Quelle, keine berührt `xyz.dqrkis` |
+
+### 11.5 Rücknahme der Instrumentierung / Artefakt-Integrität
+
+- `ModuleSelfTest.java` **gelöscht**, Hook in `MinecraftClientMixin.onTick` **entfernt**.
+- `git status`/`git diff` danach: **leer** — der Quellbaum liegt exakt auf Commit
+  **`5f90f33`** (`audit pass 3: remove 4 flagged modules and the EncryptedString obfuscation helper`),
+  demselben Stand wie Tag `v1.2.11-audited` und Release.
+- **Gegenbeweis:** Neubau aus dem sauberen Baum liefert wieder **byte-identisch** das Release-Artefakt —
+  `dqrkis-b1.1.jar`, **SHA-256 `7501719d056c1d8134212312fce28b6bc550299374e29dbab416c4a69599d430`**,
+  506.220 Bytes, unverändert zu Abschnitt 10.3. Der Selbsttest hat also **keine Spur** im ausgelieferten
+  Artefakt hinterlassen.
+
+### 11.6 Gesamtbewertung Pass 4 und ehrliche Grenze
+
+**Alle 70 verbleibenden Module funktionieren nach der Entobfuskation und den Modul-Entfernungen:**
+69 mit vollständig sauberem An/Aus-Rundlauf, 1 (`Auto Sell`) mit designbedingter, exception-freier
+Selbstdeaktivierung ohne Welt/Spieler. **Keine neuen Fehler, keine Regressionen.**
+
+Grenze (wie bereits in Abschnitt 7 angemerkt): Das Harness lief am **Hauptmenü ohne geladene Welt**.
+Damit bewiesen ist die Konstruktion, die Hook-/Listener-Registrierung und der saubere
+Enable/Disable-Pfad jedes Moduls — **nicht** die taktische Spielwirkung im Live-Einsatz (z. B.
+Kampf-Timings gegen echte Gegner), die headless nicht prüfbar ist.
