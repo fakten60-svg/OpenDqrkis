@@ -67,6 +67,17 @@ if command -v xdotool >/dev/null 2>&1; then
 	xdotool key F2 >/dev/null 2>&1
 	echo "sent F2 (screenshot 2)"
 	sleep 6
+
+	# Optional: open the client ClickGUI (bound to Right Shift) and screenshot it.
+	# Enable with CAPTURE_CLICKGUI=1 when calling this script.
+	if [ "${CAPTURE_CLICKGUI:-0}" = "1" ]; then
+		xdotool key shift+r >/dev/null 2>&1
+		echo "sent Right Shift (open ClickGUI)"
+		sleep 8
+		xdotool key F2 >/dev/null 2>&1
+		echo "sent F2 (clickgui screenshot)"
+		sleep 6
+	fi
 fi
 
 echo "--- Minecraft screenshots ---"

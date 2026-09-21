@@ -20,7 +20,7 @@ public final class Dqrkis {
 	public FriendManager friendManager;
 	public static MinecraftClient mc;
 	public String version = " b1.3";
-	public static boolean BETA; //this was for beta kids but ablue never made it a reality, and you basically paid extra 10 bucks for nothing while ablue spent it all on war thunder to buy pre-historic tanks and estrogen 🤡🤡🤡
+	public static boolean BETA; // unused legacy flag from the original codebase (kept for source fidelity)
 	public static Dqrkis INSTANCE;
 	public boolean guiInitialized;
 	public ClickGui clickGui;
