@@ -9,7 +9,6 @@ import xyz.dqrkis.module.modules.client.Friends;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.MinMaxSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.MouseSimulation;
 import xyz.dqrkis.utils.TimerUtils;
 import xyz.dqrkis.utils.WorldUtils;
@@ -24,50 +23,50 @@ import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
 
 public final class TriggerBot extends Module implements TickListener, AttackListener {
-	private final BooleanSetting inScreen = new BooleanSetting(EncryptedString.of("Work In Screen"), false)
-			.setDescription(EncryptedString.of("Will trigger even if youre inside a screen"));
-	private final BooleanSetting whileUse = new BooleanSetting(EncryptedString.of("While Use"), false)
-			.setDescription(EncryptedString.of("Will hit the player no matter if you're eating or blocking with a shield"));
-	private final BooleanSetting onLeftClick = new BooleanSetting(EncryptedString.of("On Left Click"), false)
-			.setDescription(EncryptedString.of("Only gets triggered if holding down left click"));
-	private final BooleanSetting allItems = new BooleanSetting(EncryptedString.of("All Items"), false)
-			.setDescription(EncryptedString.of("Works with all Items /THIS USES SWORD DELAY AS THE DELAY/"));
-	private final MinMaxSetting swordDelay = new MinMaxSetting(EncryptedString.of("Sword Delay"), 0, 1000, 1, 540, 550)
-			.setDescription(EncryptedString.of("Delay for swords"));
-	private final MinMaxSetting axeDelay = new MinMaxSetting(EncryptedString.of("Axe Delay"), 0, 1000, 1, 780, 800)
-			.setDescription(EncryptedString.of("Delay for axes"));
-	/*private final NumberSetting swordDelay = new NumberSetting(EncryptedString.of("Sword Delay"), 0, 1000, 550, 1)
-			.setDescription(EncryptedString.of("Delay for swords"));*/
-	/*private final NumberSetting axeDelay = new NumberSetting(EncryptedString.of("Axe Delay"), 0, 1000, 800, 1)
-			.setDescription(EncryptedString.of("Delay for axes"));*/
-	private final BooleanSetting checkShield = new BooleanSetting(EncryptedString.of("Check Shield"), false)
-			.setDescription(EncryptedString.of("Checks if the player is blocking your hits with a shield (Recommended with Shield Disabler)"));
-	private final BooleanSetting onlyCritSword = new BooleanSetting(EncryptedString.of("Only Crit Sword"), false)
-			.setDescription(EncryptedString.of("Only does critical hits with a sword"));
-	private final BooleanSetting onlyCritAxe = new BooleanSetting(EncryptedString.of("Only Crit Axe"), false)
-			.setDescription(EncryptedString.of("Only does critical hits with an axe"));
-	private final BooleanSetting swing = new BooleanSetting(EncryptedString.of("Swing Hand"), true)
-			.setDescription(EncryptedString.of("Whether to swing the hand or not"));
-	private final BooleanSetting whileAscend = new BooleanSetting(EncryptedString.of("While Ascending"), false)
-			.setDescription(EncryptedString.of("Wont hit if you're ascending from a jump, only if on ground or falling"));
-	private final BooleanSetting clickSimulation = new BooleanSetting(EncryptedString.of("Click Simulation"), false)
-			.setDescription(EncryptedString.of("Makes the CPS hud think you're legit"));
-	private final BooleanSetting strayBypass = new BooleanSetting(EncryptedString.of("Stray Bypass"), false)
-			.setDescription(EncryptedString.of("Bypasses stray's Anti-TriggerBot"));
-	private final BooleanSetting allEntities = new BooleanSetting(EncryptedString.of("All Entities"), false)
-			.setDescription(EncryptedString.of("Will attack all entities"));
-	private final BooleanSetting useShield = new BooleanSetting(EncryptedString.of("Use Shield"), false)
-			.setDescription(EncryptedString.of("Uses shield if it's in your offhand"));
-	private final NumberSetting shieldTime = new NumberSetting(EncryptedString.of("Shield Time"), 100, 1000, 350, 1);
-	private final BooleanSetting sticky = new BooleanSetting(EncryptedString.of("Same Player"), false)
-			.setDescription(EncryptedString.of("Hits the player that was recently attacked, good for FFA"));
+	private final BooleanSetting inScreen = new BooleanSetting("Work In Screen", false)
+			.setDescription("Will trigger even if youre inside a screen");
+	private final BooleanSetting whileUse = new BooleanSetting("While Use", false)
+			.setDescription("Will hit the player no matter if you're eating or blocking with a shield");
+	private final BooleanSetting onLeftClick = new BooleanSetting("On Left Click", false)
+			.setDescription("Only gets triggered if holding down left click");
+	private final BooleanSetting allItems = new BooleanSetting("All Items", false)
+			.setDescription("Works with all Items /THIS USES SWORD DELAY AS THE DELAY/");
+	private final MinMaxSetting swordDelay = new MinMaxSetting("Sword Delay", 0, 1000, 1, 540, 550)
+			.setDescription("Delay for swords");
+	private final MinMaxSetting axeDelay = new MinMaxSetting("Axe Delay", 0, 1000, 1, 780, 800)
+			.setDescription("Delay for axes");
+	/*private final NumberSetting swordDelay = new NumberSetting("Sword Delay", 0, 1000, 550, 1)
+			.setDescription("Delay for swords");*/
+	/*private final NumberSetting axeDelay = new NumberSetting("Axe Delay", 0, 1000, 800, 1)
+			.setDescription("Delay for axes");*/
+	private final BooleanSetting checkShield = new BooleanSetting("Check Shield", false)
+			.setDescription("Checks if the player is blocking your hits with a shield (Recommended with Shield Disabler)");
+	private final BooleanSetting onlyCritSword = new BooleanSetting("Only Crit Sword", false)
+			.setDescription("Only does critical hits with a sword");
+	private final BooleanSetting onlyCritAxe = new BooleanSetting("Only Crit Axe", false)
+			.setDescription("Only does critical hits with an axe");
+	private final BooleanSetting swing = new BooleanSetting("Swing Hand", true)
+			.setDescription("Whether to swing the hand or not");
+	private final BooleanSetting whileAscend = new BooleanSetting("While Ascending", false)
+			.setDescription("Wont hit if you're ascending from a jump, only if on ground or falling");
+	private final BooleanSetting clickSimulation = new BooleanSetting("Click Simulation", false)
+			.setDescription("Makes the CPS hud think you're legit");
+	private final BooleanSetting strayBypass = new BooleanSetting("Stray Bypass", false)
+			.setDescription("Bypasses stray's Anti-TriggerBot");
+	private final BooleanSetting allEntities = new BooleanSetting("All Entities", false)
+			.setDescription("Will attack all entities");
+	private final BooleanSetting useShield = new BooleanSetting("Use Shield", false)
+			.setDescription("Uses shield if it's in your offhand");
+	private final NumberSetting shieldTime = new NumberSetting("Shield Time", 100, 1000, 350, 1);
+	private final BooleanSetting sticky = new BooleanSetting("Same Player", false)
+			.setDescription("Hits the player that was recently attacked, good for FFA");
 	private final TimerUtils timer = new TimerUtils();
 
 	private int currentSwordDelay, currentAxeDelay;
 
 	public TriggerBot() {
-		super(EncryptedString.of("Trigger Bot"),
-				EncryptedString.of("Automatically hits players for you"),
+		super("Trigger Bot",
+				"Automatically hits players for you",
 				-1,
 				Category.COMBAT);
 		addSettings(inScreen, whileUse, onLeftClick, allItems, swordDelay, axeDelay, checkShield, whileAscend, sticky, onlyCritSword, onlyCritAxe, swing, clickSimulation, strayBypass, allEntities, useShield, shieldTime);

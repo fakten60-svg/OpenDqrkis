@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.RenderUtils;
 import xyz.dqrkis.utils.WorldUtils;
 import net.minecraft.block.entity.*;
@@ -20,14 +19,14 @@ import net.minecraft.world.chunk.WorldChunk;
 import java.awt.*;
 
 public final class StorageEsp extends Module implements GameRenderListener, PacketReceiveListener {
-	private final NumberSetting alpha = new NumberSetting(EncryptedString.of("Alpha"), 1, 255, 125, 1);
-	private final BooleanSetting donutBypass = new BooleanSetting(EncryptedString.of("Donut Bypass"), false);
-	private final BooleanSetting tracers = new BooleanSetting(EncryptedString.of("Tracers"), false)
-			.setDescription(EncryptedString.of("Draws a line from your player to the storage block"));
+	private final NumberSetting alpha = new NumberSetting("Alpha", 1, 255, 125, 1);
+	private final BooleanSetting donutBypass = new BooleanSetting("Donut Bypass", false);
+	private final BooleanSetting tracers = new BooleanSetting("Tracers", false)
+			.setDescription("Draws a line from your player to the storage block");
 
 	public StorageEsp() {
-		super(EncryptedString.of("Storage ESP"),
-				EncryptedString.of("Renders storage blocks through walls"),
+		super("Storage ESP",
+				"Renders storage blocks through walls",
 				-1,
 				Category.RENDER);
 		addSettings(donutBypass, alpha, tracers);

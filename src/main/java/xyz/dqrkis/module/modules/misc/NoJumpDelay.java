@@ -3,13 +3,12 @@ package xyz.dqrkis.module.modules.misc;
 import xyz.dqrkis.event.events.TickListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
-import xyz.dqrkis.utils.EncryptedString;
 import org.lwjgl.glfw.GLFW;
 
 public final class NoJumpDelay extends Module implements TickListener {
 	public NoJumpDelay() {
-		super(EncryptedString.of("No Jump Delay"),
-				EncryptedString.of("Lets you jump faster, removing the delay"),
+		super("No Jump Delay",
+				"Lets you jump faster, removing the delay",
 				-1,
 				Category.MISC);
 	}

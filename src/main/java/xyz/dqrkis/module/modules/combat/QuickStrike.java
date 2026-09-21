@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.ItemUtils;
 import xyz.dqrkis.utils.WorldUtils;
@@ -19,19 +18,19 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 
 public final class QuickStrike extends Module implements TickListener {
-	private final NumberSetting minFallDistance = new NumberSetting(EncryptedString.of("Min Fall Distance"), 1, 10, 3, 0.5)
-			.setDescription(EncryptedString.of("Only strikes after falling this far"));
-	private final NumberSetting attackDelay = new NumberSetting(EncryptedString.of("Attack Delay"), 0, 500, 100, 10)
-			.setDescription(EncryptedString.of("Milliseconds between attacks"));
-	private final NumberSetting densityFallDistance = new NumberSetting(EncryptedString.of("Density Fall Distance"), 1, 20, 7, 0.5)
-			.setDescription(EncryptedString.of("Falls beyond this use a Density mace instead of Breach"));
-	private final BooleanSetting targetPlayers = new BooleanSetting(EncryptedString.of("Target Players"), true);
-	private final BooleanSetting targetMobs = new BooleanSetting(EncryptedString.of("Target Mobs"), false)
-			.setDescription(EncryptedString.of("Also strikes mobs (ignores passive and tamed ones)"));
-	private final BooleanSetting shieldSwap = new BooleanSetting(EncryptedString.of("Shield Swap"), false)
-			.setDescription(EncryptedString.of("Swaps to an axe first against blocking players"));
-	private final BooleanSetting autoSwap = new BooleanSetting(EncryptedString.of("Auto Swap"), true)
-			.setDescription(EncryptedString.of("Swaps to a mace automatically"));
+	private final NumberSetting minFallDistance = new NumberSetting("Min Fall Distance", 1, 10, 3, 0.5)
+			.setDescription("Only strikes after falling this far");
+	private final NumberSetting attackDelay = new NumberSetting("Attack Delay", 0, 500, 100, 10)
+			.setDescription("Milliseconds between attacks");
+	private final NumberSetting densityFallDistance = new NumberSetting("Density Fall Distance", 1, 20, 7, 0.5)
+			.setDescription("Falls beyond this use a Density mace instead of Breach");
+	private final BooleanSetting targetPlayers = new BooleanSetting("Target Players", true);
+	private final BooleanSetting targetMobs = new BooleanSetting("Target Mobs", false)
+			.setDescription("Also strikes mobs (ignores passive and tamed ones)");
+	private final BooleanSetting shieldSwap = new BooleanSetting("Shield Swap", false)
+			.setDescription("Swaps to an axe first against blocking players");
+	private final BooleanSetting autoSwap = new BooleanSetting("Auto Swap", true)
+			.setDescription("Swaps to a mace automatically");
 
 	private long lastAttackMs;
 	private int previousSlot = -1;
@@ -45,8 +44,8 @@ public final class QuickStrike extends Module implements TickListener {
 	private boolean airborne;
 
 	public QuickStrike() {
-		super(EncryptedString.of("Quick Strike"),
-				EncryptedString.of("Automatically attacks while falling with mace."),
+		super("Quick Strike",
+				"Automatically attacks while falling with mace.",
 				-1,
 				Category.COMBAT);
 		addSettings(minFallDistance, attackDelay, densityFallDistance, targetPlayers, targetMobs, shieldSwap, autoSwap);

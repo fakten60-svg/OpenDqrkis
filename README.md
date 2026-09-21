@@ -92,6 +92,29 @@ Der vollständige Prüfbericht steht in **[AUDIT_REPORT.md](AUDIT_REPORT.md)** �
   `Cannot remap addMessage because it does not exist in any of the targets` ist verschwunden,
   und der Mixin ist in der gebauten JAR statisch auf `class_338` / `method_44811` remappt.
 
+### 9. Modul-Entfernung & Entobfuskation (Pass 3)
+
+Auf ausdrückliche Anforderung wurden **vier Module komplett entfernt** (Datei + Registrierung +
+jegliche Referenz in Mixins/GUI):
+
+* **`SelfDestruct`** — destruktives „Panik-Wipe“-Modul (nullt alle Modulnamen/Settings und leert
+  den Client-Speicher). Die bereits in Pass 1 entfernten JAR-Download-Teile blieben weg; das Modul
+  selbst ist jetzt komplett gelöscht.
+* **`AuctionSniper`** — automatisierter Auktionshaus-Käufer (der verbotene API-Modus war schon
+  in Pass 1 entfernt; das Modul selbst ist jetzt komplett gelöscht).
+* **`SilentHomeSetter`** — automatisiertes `sethome`/`delhome` inkl. Unterdrückung der
+  Server-Overlay-Meldung per Mixin (das Modul selbst ist jetzt komplett gelöscht; die zugehörige
+  `setOverlayMessage`-Injection wurde aus `InGameHudMixin` entfernt).
+* **`SpawnerDropper`** — automatisierter Spawner-GUI-Klicker (komplett gelöscht).
+
+Zusätzlich wurde der **Verschleierungs-Helper `EncryptedString`** (XOR-String-Klasse, 692
+Aufrufstellen in 80 Dateien) vollständig entfernt: Alle Modulnamen, Beschreibungen und
+Setting-Labels stehen jetzt als **Klartext-Strings** im Quellcode. Das macht Scanner-Prüfungen
+trivial und ändert nichts am Verhalten.
+
+**Auswirkung:** Der Client hat jetzt **70 Module** (vorher 74). `ProfileManager` speichert die
+Konfiguration per Listenindex — eine alte `dqrkis.json` muss einmal neu angelegt werden.
+
 ---
 
 ## Was NICHT geändert wurde
@@ -99,8 +122,9 @@ Der vollständige Prüfbericht steht in **[AUDIT_REPORT.md](AUDIT_REPORT.md)** �
 * **Die Cheat-Funktionen selbst** (Aimbot, AutoCrystal, ESP, AutoReconnect, Ping-Spoof …).
   Die Entschärfung entfernt Malware-Fähigkeiten, nicht das Cheating. Das ist eine bewusste
   Entscheidung, keine Lücke im Audit.
-* `utils/EncryptedString.java` — ein XOR-„Verschlüsselungs“-Helper. Er ist wirkungslos als
-  Verschleierung (die Literale stehen als Klartext im Bytecode), aber auch harmlos.
+* `utils/EncryptedString.java` — ein XOR-„Verschlüsselungs“-Helper. Er war wirkungslos als
+  Verschleierung (die Literale standen als Klartext im Bytecode) und wurde in **Pass 3 vollständig
+  entfernt** — ebenso vier Module auf ausdrücklichen Wunsch (siehe unten).
 
 ---
 
@@ -220,10 +244,10 @@ src/main/java/xyz/dqrkis/
 ├── mixin/                   # 28 Minecraft-Mixins (Rendering, Input, Netzwerk-Hooks)
 ├── module/
 │   ├── modules/combat/      # Aimbot-, Crystal-, Totem-Module
-│   ├── modules/misc/        # AutoReconnect, SpawnerProtect, AuctionSniper …
+│   ├── modules/misc/        # AutoReconnect, SpawnerProtect, AutoSell …
 │   ├── modules/render/      # ESP, HUD, Scoreboard-Module
 │   ├── modules/cart/        # Cart-/Anchor-Module
-│   ├── modules/client/      # ClickGUI, Friends, SelfDestruct
+│   ├── modules/client/      # ClickGUI, Friends
 │   └── setting/             # Setting-Typen
 └── utils/                   # Render-, Inventory-, Rotations- und Netz-Helfer
 ```

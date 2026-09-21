@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
@@ -13,7 +12,7 @@ import net.minecraft.screen.slot.SlotActionType;
 public final class AutoSell extends Module implements TickListener {
 	private enum State { IDLE, OPENING_GUI, DEPOSITING, CLOSING }
 
-	private final NumberSetting clickDelay = new NumberSetting(EncryptedString.of("Click Delay (ticks)"), 1, 10, 2, 1);
+	private final NumberSetting clickDelay = new NumberSetting("Click Delay (ticks)", 1, 10, 2, 1);
 
 	private State state = State.IDLE;
 	private int searchStartSlot;
@@ -21,8 +20,8 @@ public final class AutoSell extends Module implements TickListener {
 	private int delayTicks;
 
 	public AutoSell() {
-		super(EncryptedString.of("Auto Sell"),
-				EncryptedString.of("Automatically sells all items in your inventory."),
+		super("Auto Sell",
+				"Automatically sells all items in your inventory.",
 				-1,
 				Category.MISC);
 		addSettings(clickDelay);

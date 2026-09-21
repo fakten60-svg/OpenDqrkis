@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.KeyUtils;
 import net.minecraft.entity.Entity;
@@ -20,8 +19,8 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 public final class AutoLava extends Module implements TickListener {
-	private final KeybindSetting activateKey = new KeybindSetting(EncryptedString.of("Activate Key"), GLFW.GLFW_KEY_R, false);
-	private final NumberSetting delay = new NumberSetting(EncryptedString.of("Delay"), 0, 10, 0, 1);
+	private final KeybindSetting activateKey = new KeybindSetting("Activate Key", GLFW.GLFW_KEY_R, false);
+	private final NumberSetting delay = new NumberSetting("Delay", 0, 10, 0, 1);
 
 	private BlockPos targetPos;
 	private int state;
@@ -29,8 +28,8 @@ public final class AutoLava extends Module implements TickListener {
 	private boolean keyWasPressed;
 
 	public AutoLava() {
-		super(EncryptedString.of("Auto Lava"),
-				EncryptedString.of("Places lava at player feet"),
+		super("Auto Lava",
+				"Places lava at player feet",
 				-1,
 				Category.CART);
 		addSettings(activateKey, delay);

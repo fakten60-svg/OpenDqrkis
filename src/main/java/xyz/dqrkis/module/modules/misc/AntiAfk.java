@@ -4,18 +4,17 @@ import xyz.dqrkis.event.events.TickListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.util.math.MathHelper;
 
 public final class AntiAfk extends Module implements TickListener {
-	private final NumberSetting interval = new NumberSetting(EncryptedString.of("Interval"), 20, 600, 100, 10)
-			.setDescription(EncryptedString.of("Ticks between view rotations"));
+	private final NumberSetting interval = new NumberSetting("Interval", 20, 600, 100, 10)
+			.setDescription("Ticks between view rotations");
 
 	private int ticks;
 
 	public AntiAfk() {
-		super(EncryptedString.of("Anti AFK"),
-				EncryptedString.of("Prevents you from being kicked for being AFK by rotating your view"),
+		super("Anti AFK",
+				"Prevents you from being kicked for being AFK by rotating your view",
 				-1,
 				Category.MISC);
 		addSettings(interval);

@@ -9,7 +9,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.MinMaxSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.TimerUtils;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Items;
@@ -28,14 +27,14 @@ public final class FakeLag extends Module implements PlayerTickListener, PacketR
 	public boolean bool;
 	public Vec3d pos = Vec3d.ZERO;
 	public TimerUtils timerUtil = new TimerUtils();
-	private final MinMaxSetting lagDelay = new MinMaxSetting(EncryptedString.of("Lag Delay"), 0, 1000, 1, 100, 200);
-	private final BooleanSetting cancelOnElytra = new BooleanSetting(EncryptedString.of("Cancel on Elytra"), false)
-			.setDescription(EncryptedString.of("Cancel the lagging effect when you're wearing an elytra"));
+	private final MinMaxSetting lagDelay = new MinMaxSetting("Lag Delay", 0, 1000, 1, 100, 200);
+	private final BooleanSetting cancelOnElytra = new BooleanSetting("Cancel on Elytra", false)
+			.setDescription("Cancel the lagging effect when you're wearing an elytra");
 
 	private int delay;
 	public FakeLag() {
-		super(EncryptedString.of("Fake Lag"),
-				EncryptedString.of("Makes it impossible to aim at you by creating a lagging effect"),
+		super("Fake Lag",
+				"Makes it impossible to aim at you by creating a lagging effect",
 				-1,
 				Category.MISC);
 		addSettings(lagDelay, cancelOnElytra);

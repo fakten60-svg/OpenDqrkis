@@ -3,7 +3,6 @@ package xyz.dqrkis.module.modules.combat;
 import xyz.dqrkis.event.events.PacketSendListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.WorldUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.decoration.EndCrystalEntity;
@@ -17,8 +16,8 @@ import net.minecraft.util.math.Vec3d;
 
 public final class CrystalOptimizer extends Module implements PacketSendListener {
 	public CrystalOptimizer() {
-		super(EncryptedString.of("Crystal Optimizer"),
-				EncryptedString.of("Makes your crystals disappear faster client-side so you can place crystals faster"),
+		super("Crystal Optimizer",
+				"Makes your crystals disappear faster client-side so you can place crystals faster",
 				-1,
 				Category.COMBAT);
 	}

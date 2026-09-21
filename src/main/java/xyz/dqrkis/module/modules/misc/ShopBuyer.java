@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.ModeSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.screen.GenericContainerScreenHandler;
@@ -36,17 +35,17 @@ public final class ShopBuyer extends Module implements TickListener {
 		}
 	}
 
-	private final ModeSetting<ShopItem> item = new ModeSetting<>(EncryptedString.of("Item"), ShopItem.Obsidian, ShopItem.class);
-	private final BooleanSetting autoDrop = new BooleanSetting(EncryptedString.of("Auto Drop"), true)
-			.setDescription(EncryptedString.of("Drops the bought items on the ground"));
+	private final ModeSetting<ShopItem> item = new ModeSetting<>("Item", ShopItem.Obsidian, ShopItem.class);
+	private final BooleanSetting autoDrop = new BooleanSetting("Auto Drop", true)
+			.setDescription("Drops the bought items on the ground");
 
 	private int delayTicks;
 	private boolean inCategoryPage;
 	private boolean inBuyPage;
 
 	public ShopBuyer() {
-		super(EncryptedString.of("Shop Buyer"),
-				EncryptedString.of("Automatically buys selected items from PVP shop category"),
+		super("Shop Buyer",
+				"Automatically buys selected items from PVP shop category",
 				-1,
 				Category.MISC);
 		addSettings(item, autoDrop);

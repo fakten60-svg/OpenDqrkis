@@ -7,7 +7,6 @@ import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.ModeSetting;
 import xyz.dqrkis.module.setting.StringSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.item.Items;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -18,11 +17,11 @@ public final class AutoShulker extends Module implements TickListener {
     public enum ItemMode { SHULKERS, SHELLS }
     public enum Action { BUY_AND_SELL, BUY_ONLY, SELL_ONLY, ORDER_ONLY }
 
-    private final ModeSetting<ItemMode> itemMode = new ModeSetting<>(EncryptedString.of("Item Mode"), ItemMode.SHULKERS, ItemMode.class);
-    private final ModeSetting<Action> action = new ModeSetting<>(EncryptedString.of("Action"), Action.BUY_AND_SELL, Action.class);
-    private final StringSetting minPrice = new StringSetting(EncryptedString.of("Min Price"), "850");
-    private final StringSetting targetPlayer = new StringSetting(EncryptedString.of("Target Player"), "");
-    private final BooleanSetting autoDrop = new BooleanSetting(EncryptedString.of("Auto Drop"), false);
+    private final ModeSetting<ItemMode> itemMode = new ModeSetting<>("Item Mode", ItemMode.SHULKERS, ItemMode.class);
+    private final ModeSetting<Action> action = new ModeSetting<>("Action", Action.BUY_AND_SELL, Action.class);
+    private final StringSetting minPrice = new StringSetting("Min Price", "850");
+    private final StringSetting targetPlayer = new StringSetting("Target Player", "");
+    private final BooleanSetting autoDrop = new BooleanSetting("Auto Drop", false);
 
     private int ticks;
     private State state = State.IDLE;
@@ -30,7 +29,7 @@ public final class AutoShulker extends Module implements TickListener {
     private enum State { IDLE, OPEN_SHOP, SHOP_BUY, SHOP_CONFIRM, OPEN_ORDERS, ORDERS_SELECT, CYCLE_PAUSE }
 
     public AutoShulker() {
-        super(EncryptedString.of("Auto Shulker"), EncryptedString.of("Automatically buys/sells shulkers and shulker shells with player targeting"), -1, Category.MISC);
+        super("Auto Shulker", "Automatically buys/sells shulkers and shulker shells with player targeting", -1, Category.MISC);
         addSettings(itemMode, action, minPrice, targetPlayer, autoDrop);
     }
 

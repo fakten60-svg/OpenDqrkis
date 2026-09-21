@@ -7,7 +7,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.MouseSimulation;
 import xyz.dqrkis.utils.WorldUtils;
@@ -19,18 +18,18 @@ import net.minecraft.util.hit.EntityHitResult;
 import org.lwjgl.glfw.GLFW;
 
 public final class ShieldDisabler extends Module implements TickListener, AttackListener {
-	private final NumberSetting hitDelay = new NumberSetting(EncryptedString.of("Hit Delay"), 0, 20, 0, 1);
-	private final NumberSetting switchDelay = new NumberSetting(EncryptedString.of("Switch Delay"), 0, 20, 0, 1);
-	private final BooleanSetting switchBack = new BooleanSetting(EncryptedString.of("Switch Back"), true);
-	private final BooleanSetting stun = new BooleanSetting(EncryptedString.of("Stun"), false);
-	private final BooleanSetting clickSimulate = new BooleanSetting(EncryptedString.of("Click Simulation"), false);
-	private final BooleanSetting requireHoldAxe = new BooleanSetting(EncryptedString.of("Hold Axe"), false);
+	private final NumberSetting hitDelay = new NumberSetting("Hit Delay", 0, 20, 0, 1);
+	private final NumberSetting switchDelay = new NumberSetting("Switch Delay", 0, 20, 0, 1);
+	private final BooleanSetting switchBack = new BooleanSetting("Switch Back", true);
+	private final BooleanSetting stun = new BooleanSetting("Stun", false);
+	private final BooleanSetting clickSimulate = new BooleanSetting("Click Simulation", false);
+	private final BooleanSetting requireHoldAxe = new BooleanSetting("Hold Axe", false);
 
 	int previousSlot, hitClock, switchClock;
 
 	public ShieldDisabler() {
-		super(EncryptedString.of("Shield Disabler"),
-				EncryptedString.of("Automatically disables your opponents shield"),
+		super("Shield Disabler",
+				"Automatically disables your opponents shield",
 				-1,
 				Category.COMBAT);
 

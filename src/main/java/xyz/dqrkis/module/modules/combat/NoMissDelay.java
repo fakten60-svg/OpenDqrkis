@@ -5,20 +5,19 @@ import xyz.dqrkis.event.events.BlockBreakingListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.WorldUtils;
 import net.minecraft.util.hit.HitResult;
 
 public final class NoMissDelay extends Module implements AttackListener, BlockBreakingListener {
-	private final BooleanSetting onlyWeapon = new BooleanSetting(EncryptedString.of("Only weapon"), true);
-	private final BooleanSetting air = new BooleanSetting(EncryptedString.of("Air"), true)
-			.setDescription(EncryptedString.of("Whether to stop hits directed to the air"));
-	private final BooleanSetting blocks = new BooleanSetting(EncryptedString.of("Blocks"), false)
-			.setDescription(EncryptedString.of("Whether to stop hits directed to blocks"));
+	private final BooleanSetting onlyWeapon = new BooleanSetting("Only weapon", true);
+	private final BooleanSetting air = new BooleanSetting("Air", true)
+			.setDescription("Whether to stop hits directed to the air");
+	private final BooleanSetting blocks = new BooleanSetting("Blocks", false)
+			.setDescription("Whether to stop hits directed to blocks");
 
 	public NoMissDelay() {
-		super(EncryptedString.of("No Miss Delay"),
-				EncryptedString.of("Doesn't let you miss your sword/axe hits"),
+		super("No Miss Delay",
+				"Doesn't let you miss your sword/axe hits",
 				-1,
 				Category.COMBAT);
 		addSettings(onlyWeapon, air, blocks);

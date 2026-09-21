@@ -9,7 +9,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.RenderUtils;
 import xyz.dqrkis.utils.TextRenderer;
 import xyz.dqrkis.utils.WorldUtils;
@@ -22,19 +21,19 @@ import org.lwjgl.glfw.GLFW;
 import java.awt.*;
 
 public final class Friends extends Module implements ButtonListener, AttackListener, HudListener {
-    private final KeybindSetting addFriendKey = new KeybindSetting(EncryptedString.of("Friend Key"), GLFW.GLFW_MOUSE_BUTTON_MIDDLE, false)
-            .setDescription(EncryptedString.of("Key to add/remove friends"));
-    public final BooleanSetting antiAttack = new BooleanSetting(EncryptedString.of("Anti-Attack"), false)
-            .setDescription(EncryptedString.of("Doesn't let you hit friends"));
-    public final BooleanSetting disableAimAssist = new BooleanSetting(EncryptedString.of("Anti-Aim"), false)
-            .setDescription(EncryptedString.of("Disables aim assist for friends"));
-    public final BooleanSetting friendStatus = new BooleanSetting(EncryptedString.of("Friend Status"), false)
-            .setDescription(EncryptedString.of("Tells you if you're aiming at a friend or not"));
+    private final KeybindSetting addFriendKey = new KeybindSetting("Friend Key", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, false)
+            .setDescription("Key to add/remove friends");
+    public final BooleanSetting antiAttack = new BooleanSetting("Anti-Attack", false)
+            .setDescription("Doesn't let you hit friends");
+    public final BooleanSetting disableAimAssist = new BooleanSetting("Anti-Aim", false)
+            .setDescription("Disables aim assist for friends");
+    public final BooleanSetting friendStatus = new BooleanSetting("Friend Status", false)
+            .setDescription("Tells you if you're aiming at a friend or not");
 
     private FriendManager manager;
 
     public Friends() {
-        super(EncryptedString.of("Friends"), EncryptedString.of("This module makes it so you can't do certain stuff if you have a player friended!"), -1, Category.CLIENT);
+        super("Friends", "This module makes it so you can't do certain stuff if you have a player friended!", -1, Category.CLIENT);
         addSettings(addFriendKey, antiAttack, disableAimAssist, friendStatus);
         setKey(-1);
     }
@@ -101,7 +100,7 @@ public final class Friends extends Module implements ButtonListener, AttackListe
 
             if(entity instanceof PlayerEntity player) {
                 if(manager.isFriend(player)) {
-                    TextRenderer.drawCenteredString(EncryptedString.of("Player is friend"), context, (mc.getWindow().getWidth() / 2), (mc.getWindow().getHeight() / 2) + 25, Color.GREEN.getRGB());
+                    TextRenderer.drawCenteredString("Player is friend", context, (mc.getWindow().getWidth() / 2), (mc.getWindow().getHeight() / 2) + 25, Color.GREEN.getRGB());
                 }
             }
         }

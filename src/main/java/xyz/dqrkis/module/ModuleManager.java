@@ -5,12 +5,10 @@ import xyz.dqrkis.event.events.ButtonListener;
 import xyz.dqrkis.module.modules.cart.*;
 import xyz.dqrkis.module.modules.client.ClickGUI;
 import xyz.dqrkis.module.modules.client.Friends;
-import xyz.dqrkis.module.modules.client.SelfDestruct;
 import xyz.dqrkis.module.modules.combat.*;
 import xyz.dqrkis.module.modules.misc.*;
 import xyz.dqrkis.module.modules.render.*;
 import xyz.dqrkis.module.setting.KeybindSetting;
-import xyz.dqrkis.utils.EncryptedString;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -65,16 +63,13 @@ public final class ModuleManager implements ButtonListener {
 		add(new LegitTridentFly());
 		add(new AntiTrap());
 		add(new AutoReconnect());
-add(new SilentHomeSetter());
 		add(new LightFinder());
 		add(new RtpBaseFinder());
 		add(new SpawnerProtect());
 		add(new AutoTreeFarmer());
 		add(new TunnelBaseFinder());
-		add(new AuctionSniper());
 		add(new AutoShulker());
 		add(new AutoBoneOrder());
-		add(new SpawnerDropper());
 
 		//Misc
 		add(new Prevent());
@@ -106,7 +101,6 @@ add(new SilentHomeSetter());
 		//Client
 		add(new ClickGUI());
 		add(new Friends());
-		add(new SelfDestruct());
 	}
 
 	public List<Module> getEnabledModules() {
@@ -124,7 +118,7 @@ add(new SilentHomeSetter());
 		Dqrkis.INSTANCE.getEventManager().add(ButtonListener.class, this);
 
 		for (Module module : modules)
-			module.addSetting(new KeybindSetting(EncryptedString.of("Keybind"), module.getKey(), true).setDescription(EncryptedString.of("Key to enabled the module")));
+			module.addSetting(new KeybindSetting("Keybind", module.getKey(), true).setDescription("Key to enabled the module"));
 	}
 
 	public List<Module> getModulesInCategory(Category category) {
@@ -147,11 +141,9 @@ add(new SilentHomeSetter());
 
 	@Override
 	public void onButtonPress(ButtonEvent event) {
-		if(!SelfDestruct.destruct) {
-			modules.forEach(module -> {
-				if(module.getKey() == event.button && event.action == GLFW.GLFW_PRESS)
-					module.toggle();
-			});
-		}
+		modules.forEach(module -> {
+			if(module.getKey() == event.button && event.action == GLFW.GLFW_PRESS)
+				module.toggle();
+		});
 	}
 }

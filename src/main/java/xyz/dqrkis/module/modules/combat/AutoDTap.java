@@ -9,7 +9,6 @@ import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.utils.BlockUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.KeyUtils;
 import xyz.dqrkis.utils.MouseSimulation;
@@ -34,25 +33,25 @@ import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class AutoDTap extends Module implements TickListener, ItemUseListener {
-	private final KeybindSetting macroKey = new KeybindSetting(EncryptedString.of("Macro Key"), GLFW.GLFW_MOUSE_BUTTON_LEFT, false)
-			.setDescription(EncryptedString.of("Hold this button to run the macro"));
-	private final NumberSetting placeDelay = new NumberSetting(EncryptedString.of("Place Delay"), 0, 20, 3, 1);
-	private final NumberSetting breakDelay = new NumberSetting(EncryptedString.of("Break Delay"), 0, 20, 3, 1);
-	private final NumberSetting placeChance = new NumberSetting(EncryptedString.of("Place Chance %"), 0, 100, 100, 1);
-	private final NumberSetting attackChance = new NumberSetting(EncryptedString.of("Attack Chance %"), 0, 100, 100, 1);
-	private final BooleanSetting antiWeakness = new BooleanSetting(EncryptedString.of("Anti Weakness"), false)
-			.setDescription(EncryptedString.of("Pauses while weak and an enemy recently died nearby"));
-	private final BooleanSetting allEntities = new BooleanSetting(EncryptedString.of("All Entities"), false)
-			.setDescription(EncryptedString.of("Attacks any entity in the crosshair, not just crystals and slimes"));
-	private final BooleanSetting clickSimulation = new BooleanSetting(EncryptedString.of("Click Simulation"), false);
-	private final BooleanSetting breakBlocks = new BooleanSetting(EncryptedString.of("Break Blocks"), false)
-			.setDescription(EncryptedString.of("Mines the block you are pointing at"));
-	private final BooleanSetting swapForWeakness = new BooleanSetting(EncryptedString.of("Swap For Weakness"), false)
-			.setDescription(EncryptedString.of("Swaps to a sword while attacking while weak"));
-	private final NumberSetting attackWindow = new NumberSetting(EncryptedString.of("Attack Window"), 0, 100, 20, 1)
-			.setDescription(EncryptedString.of("Ticks a position stays limited after two placements"));
-	private final NumberSetting placeLimitDelay = new NumberSetting(EncryptedString.of("Place Limit Delay"), 0, 100, 10, 1)
-			.setDescription(EncryptedString.of("Extra delay once a position reaches its place limit"));
+	private final KeybindSetting macroKey = new KeybindSetting("Macro Key", GLFW.GLFW_MOUSE_BUTTON_LEFT, false)
+			.setDescription("Hold this button to run the macro");
+	private final NumberSetting placeDelay = new NumberSetting("Place Delay", 0, 20, 3, 1);
+	private final NumberSetting breakDelay = new NumberSetting("Break Delay", 0, 20, 3, 1);
+	private final NumberSetting placeChance = new NumberSetting("Place Chance %", 0, 100, 100, 1);
+	private final NumberSetting attackChance = new NumberSetting("Attack Chance %", 0, 100, 100, 1);
+	private final BooleanSetting antiWeakness = new BooleanSetting("Anti Weakness", false)
+			.setDescription("Pauses while weak and an enemy recently died nearby");
+	private final BooleanSetting allEntities = new BooleanSetting("All Entities", false)
+			.setDescription("Attacks any entity in the crosshair, not just crystals and slimes");
+	private final BooleanSetting clickSimulation = new BooleanSetting("Click Simulation", false);
+	private final BooleanSetting breakBlocks = new BooleanSetting("Break Blocks", false)
+			.setDescription("Mines the block you are pointing at");
+	private final BooleanSetting swapForWeakness = new BooleanSetting("Swap For Weakness", false)
+			.setDescription("Swaps to a sword while attacking while weak");
+	private final NumberSetting attackWindow = new NumberSetting("Attack Window", 0, 100, 20, 1)
+			.setDescription("Ticks a position stays limited after two placements");
+	private final NumberSetting placeLimitDelay = new NumberSetting("Place Limit Delay", 0, 100, 10, 1)
+			.setDescription("Extra delay once a position reaches its place limit");
 
 	private static final int MAX_PLACES_PER_POS = 2;
 
@@ -63,8 +62,8 @@ public final class AutoDTap extends Module implements TickListener, ItemUseListe
 	private final Map<BlockPos, Integer> limitWindows = new HashMap<>();
 
 	public AutoDTap() {
-		super(EncryptedString.of("Auto DTap"),
-				EncryptedString.of("Places and breaks crystals for you with limits"),
+		super("Auto DTap",
+				"Places and breaks crystals for you with limits",
 				-1,
 				Category.COMBAT);
 		addSettings(macroKey, placeDelay, breakDelay, placeChance, attackChance, antiWeakness,

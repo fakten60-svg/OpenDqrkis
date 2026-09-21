@@ -8,7 +8,6 @@ import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.utils.BlockUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.KeyUtils;
 import xyz.dqrkis.utils.MouseSimulation;
@@ -31,18 +30,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public final class Macro198 extends Module implements TickListener {
 	private enum State { IDLE, PLACE_OBI, WAIT_OBI, PLACE_CRYSTAL, BREAK_CRYSTAL }
 
-	private final KeybindSetting macroKey = new KeybindSetting(EncryptedString.of("Macro Key"), GLFW.GLFW_MOUSE_BUTTON_MIDDLE, false)
-			.setDescription(EncryptedString.of("Hold this button to run the macro"));
-	private final BooleanSetting autoBreak = new BooleanSetting(EncryptedString.of("Auto Break"), true)
-			.setDescription(EncryptedString.of("Breaks placed crystals automatically"));
-	private final NumberSetting placeDelay = new NumberSetting(EncryptedString.of("Place Delay"), 0, 20, 0, 1);
-	private final NumberSetting breakDelay = new NumberSetting(EncryptedString.of("Break Delay"), 0, 20, 0, 1);
-	private final NumberSetting placeChance = new NumberSetting(EncryptedString.of("Place Chance %"), 0, 100, 100, 1);
-	private final NumberSetting attackChance = new NumberSetting(EncryptedString.of("Attack Chance %"), 0, 100, 100, 1);
-	private final BooleanSetting clickSimulation = new BooleanSetting(EncryptedString.of("Click Simulation"), false);
-	private final BooleanSetting airSwing = new BooleanSetting(EncryptedString.of("Air Swing"), false)
-			.setDescription(EncryptedString.of("Swings at air when no crystal is in range"));
-	private final NumberSetting airSwingChance = new NumberSetting(EncryptedString.of("Air Swing Chance %"), 0, 100, 20, 1);
+	private final KeybindSetting macroKey = new KeybindSetting("Macro Key", GLFW.GLFW_MOUSE_BUTTON_MIDDLE, false)
+			.setDescription("Hold this button to run the macro");
+	private final BooleanSetting autoBreak = new BooleanSetting("Auto Break", true)
+			.setDescription("Breaks placed crystals automatically");
+	private final NumberSetting placeDelay = new NumberSetting("Place Delay", 0, 20, 0, 1);
+	private final NumberSetting breakDelay = new NumberSetting("Break Delay", 0, 20, 0, 1);
+	private final NumberSetting placeChance = new NumberSetting("Place Chance %", 0, 100, 100, 1);
+	private final NumberSetting attackChance = new NumberSetting("Attack Chance %", 0, 100, 100, 1);
+	private final BooleanSetting clickSimulation = new BooleanSetting("Click Simulation", false);
+	private final BooleanSetting airSwing = new BooleanSetting("Air Swing", false)
+			.setDescription("Swings at air when no crystal is in range");
+	private final NumberSetting airSwingChance = new NumberSetting("Air Swing Chance %", 0, 100, 20, 1);
 
 	private static final int MAX_PLACES_PER_POS = 2;
 
@@ -52,8 +51,8 @@ public final class Macro198 extends Module implements TickListener {
 	private BlockPos targetPos;
 
 	public Macro198() {
-		super(EncryptedString.of("Macro 198"),
-				EncryptedString.of("Combat macro for 1.9.8 style gameplay"),
+		super("Macro 198",
+				"Combat macro for 1.9.8 style gameplay",
 				-1,
 				Category.COMBAT);
 		addSettings(macroKey, autoBreak, placeDelay, breakDelay, placeChance, attackChance, clickSimulation, airSwing, airSwingChance);

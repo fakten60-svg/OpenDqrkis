@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.KeyUtils;
 import net.minecraft.item.BowItem;
@@ -29,10 +28,10 @@ public final class SafeCart extends Module implements TickListener {
 	private static final int STATE_START_CHARGE = 6;
 	private static final int STATE_CHARGING = 7;
 
-	private final KeybindSetting activateKey = new KeybindSetting(EncryptedString.of("Activate Key"), 1, false)
-			.setDescription(EncryptedString.of("Hold this button to run the macro"));
-	private final NumberSetting delay = new NumberSetting(EncryptedString.of("Delay"), 0, 10, 0, 1);
-	private final NumberSetting bowCharge = new NumberSetting(EncryptedString.of("Bow Charge"), 3, 20, 8, 1);
+	private final KeybindSetting activateKey = new KeybindSetting("Activate Key", 1, false)
+			.setDescription("Hold this button to run the macro");
+	private final NumberSetting delay = new NumberSetting("Delay", 0, 10, 0, 1);
+	private final NumberSetting bowCharge = new NumberSetting("Bow Charge", 3, 20, 8, 1);
 
 	private BlockPos railPos;
 	private BlockPos logPos;
@@ -41,8 +40,8 @@ public final class SafeCart extends Module implements TickListener {
 	private int chargeTicks;
 
 	public SafeCart() {
-		super(EncryptedString.of("Safe Cart"),
-				EncryptedString.of("Places rail, minecart, and oak log"),
+		super("Safe Cart",
+				"Places rail, minecart, and oak log",
 				-1,
 				Category.CART);
 		addSettings(activateKey, delay, bowCharge);

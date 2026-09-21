@@ -3,14 +3,13 @@ package xyz.dqrkis.module.modules.misc;
 import xyz.dqrkis.event.events.PacketReceiveListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.common.ResourcePackStatusC2SPacket;
 import net.minecraft.network.packet.s2c.common.ResourcePackSendS2CPacket;
 
 public class PackSpoof extends Module implements PacketReceiveListener {
     public PackSpoof() {
-        super(EncryptedString.of("Pack Spoof"), EncryptedString.of("Ignores custom resource packs"), -1, Category.MISC);
+        super("Pack Spoof", "Ignores custom resource packs", -1, Category.MISC);
     }
 
     @Override

@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.ItemUtils;
 import xyz.dqrkis.utils.WorldUtils;
@@ -14,25 +13,25 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
 public final class MaceSwap extends Module implements TickListener, ShieldDisabledListener {
-	private final BooleanSetting density = new BooleanSetting(EncryptedString.of("Density"), true)
-			.setDescription(EncryptedString.of("Prefers maces enchanted with Density"));
-	private final BooleanSetting breach = new BooleanSetting(EncryptedString.of("Breach"), true)
-			.setDescription(EncryptedString.of("Prefers maces enchanted with Breach"));
-	private final BooleanSetting swords = new BooleanSetting(EncryptedString.of("Swords"), true)
-			.setDescription(EncryptedString.of("Triggers when holding a sword"));
-	private final BooleanSetting axes = new BooleanSetting(EncryptedString.of("Axes"), false)
-			.setDescription(EncryptedString.of("Triggers when holding an axe"));
-	private final BooleanSetting switchBack = new BooleanSetting(EncryptedString.of("Switch Back"), true)
-			.setDescription(EncryptedString.of("Switches back to your previous slot"));
-	private final NumberSetting switchBackDelay = new NumberSetting(EncryptedString.of("Switch Back Delay"), 0, 20, 0, 1);
+	private final BooleanSetting density = new BooleanSetting("Density", true)
+			.setDescription("Prefers maces enchanted with Density");
+	private final BooleanSetting breach = new BooleanSetting("Breach", true)
+			.setDescription("Prefers maces enchanted with Breach");
+	private final BooleanSetting swords = new BooleanSetting("Swords", true)
+			.setDescription("Triggers when holding a sword");
+	private final BooleanSetting axes = new BooleanSetting("Axes", false)
+			.setDescription("Triggers when holding an axe");
+	private final BooleanSetting switchBack = new BooleanSetting("Switch Back", true)
+			.setDescription("Switches back to your previous slot");
+	private final NumberSetting switchBackDelay = new NumberSetting("Switch Back Delay", 0, 20, 0, 1);
 
 	private boolean swapped;
 	private int previousSlot = -1;
 	private int switchClock;
 
 	public MaceSwap() {
-		super(EncryptedString.of("Mace Swap"),
-				EncryptedString.of("Swaps to a mace after disabling an opponents shield"),
+		super("Mace Swap",
+				"Swaps to a mace after disabling an opponents shield",
 				-1,
 				Category.COMBAT);
 		addSettings(density, breach, swords, axes, switchBack, switchBackDelay);

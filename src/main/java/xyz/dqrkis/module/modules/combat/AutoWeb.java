@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -14,16 +13,16 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
 public final class AutoWeb extends Module implements TickListener {
-	private final NumberSetting delay = new NumberSetting(EncryptedString.of("Delay"), 0, 20, 2, 1)
-			.setDescription(EncryptedString.of("Ticks between web placements"));
-	private final BooleanSetting onlyHoldingWebs = new BooleanSetting(EncryptedString.of("Only Holding Webs"), true)
-			.setDescription(EncryptedString.of("Only places webs while holding cobwebs"));
+	private final NumberSetting delay = new NumberSetting("Delay", 0, 20, 2, 1)
+			.setDescription("Ticks between web placements");
+	private final BooleanSetting onlyHoldingWebs = new BooleanSetting("Only Holding Webs", true)
+			.setDescription("Only places webs while holding cobwebs");
 
 	private int placeIn;
 
 	public AutoWeb() {
-		super(EncryptedString.of("Auto Web"),
-				EncryptedString.of("Places webs at enemies feet automatically"),
+		super("Auto Web",
+				"Places webs at enemies feet automatically",
 				-1,
 				Category.COMBAT);
 		addSettings(delay, onlyHoldingWebs);

@@ -4,7 +4,6 @@ import xyz.dqrkis.Dqrkis;
 import xyz.dqrkis.event.EventManager;
 import xyz.dqrkis.event.events.HudListener;
 import xyz.dqrkis.module.modules.render.HideScoreboard;
-import xyz.dqrkis.module.modules.misc.SilentHomeSetter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;
@@ -21,14 +20,6 @@ public class InGameHudMixin {
 		HudListener.HudEvent event = new HudListener.HudEvent(context, tickCounter.getTickProgress(true));
 
 		EventManager.fire(event);
-	}
-
-	@Inject(method = "setOverlayMessage", at = @At("HEAD"), cancellable = true)
-	private void dqrkis$onSetOverlayMessage(Text message, boolean tinted, CallbackInfo ci) {
-		SilentHomeSetter silentHomeSetter = Dqrkis.INSTANCE.getModuleManager().getModule(SilentHomeSetter.class);
-		if (silentHomeSetter != null && silentHomeSetter.isEnabled() && silentHomeSetter.isHidingOverlayMessage()
-				&& message.getString().toLowerCase().contains("home"))
-			ci.cancel();
 	}
 
 	@Inject(method = "renderScoreboardSidebar(Lnet/minecraft/client/gui/DrawContext;Lnet/minecraft/client/render/RenderTickCounter;)V", at = @At("HEAD"), cancellable = true)

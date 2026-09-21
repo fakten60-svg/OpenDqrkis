@@ -6,7 +6,6 @@ import xyz.dqrkis.mixin.KeyBindingAccessor;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -14,13 +13,13 @@ import org.lwjgl.glfw.GLFW;
 
 
 public final class Freecam extends Module implements TickListener, CameraUpdateListener {
-	private final NumberSetting speed = new NumberSetting(EncryptedString.of("Speed"), 1, 10, 1, 1);
+	private final NumberSetting speed = new NumberSetting("Speed", 1, 10, 1, 1);
 	public Vec3d oldPos;
 	public Vec3d pos;
 
 	public Freecam() {
-		super(EncryptedString.of("Freecam"),
-				EncryptedString.of("Lets you move freely around the world without actually moving"),
+		super("Freecam",
+				"Lets you move freely around the world without actually moving",
 				-1,
 				Category.MISC);
 		addSettings(speed);

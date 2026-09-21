@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.mixin.ClientPlayerInteractionManagerAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -28,9 +27,9 @@ public final class AutoTreeFarmer extends Module implements TickListener {
 
     private static final int RADIUS = 16;
 
-    private final BooleanSetting hotbarRefill = new BooleanSetting(EncryptedString.of("Hotbar Refill"), true);
-    private final NumberSetting saplingCount = new NumberSetting(EncryptedString.of("Sapling Count"), 1, 10, 4, 1);
-    private final NumberSetting boneMealCount = new NumberSetting(EncryptedString.of("Bone Meal Count"), 1, 10, 5, 1);
+    private final BooleanSetting hotbarRefill = new BooleanSetting("Hotbar Refill", true);
+    private final NumberSetting saplingCount = new NumberSetting("Sapling Count", 1, 10, 4, 1);
+    private final NumberSetting boneMealCount = new NumberSetting("Bone Meal Count", 1, 10, 5, 1);
 
     private TreeState state = TreeState.SEARCHING;
     private final List<BlockPos> saplingSpots = new ArrayList<>();
@@ -39,8 +38,8 @@ public final class AutoTreeFarmer extends Module implements TickListener {
     private int savedSlot = -1;
 
     public AutoTreeFarmer() {
-        super(EncryptedString.of("Auto Tree Farmer"),
-                EncryptedString.of("AFK farms 2x2 spruce podzol patches with auto refill"),
+        super("Auto Tree Farmer",
+                "AFK farms 2x2 spruce podzol patches with auto refill",
                 -1,
                 Category.MISC);
         addSettings(hotbarRefill, saplingCount, boneMealCount);

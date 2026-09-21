@@ -10,215 +10,215 @@ public final class KeyUtils {
 	public static CharSequence getKey(int key) {
 		switch (key) {
 			case GLFW.GLFW_MOUSE_BUTTON_3 -> {
-				return EncryptedString.of("MMB");
+				return "MMB";
 			}
 			case GLFW.GLFW_KEY_UNKNOWN -> {
-				return EncryptedString.of("Unknown");
+				return "Unknown";
 			}
 			case GLFW.GLFW_KEY_ESCAPE -> {
-				return EncryptedString.of("Esc");
+				return "Esc";
 			}
 			case GLFW.GLFW_KEY_GRAVE_ACCENT -> {
-				return EncryptedString.of("Grave Accent");
+				return "Grave Accent";
 			}
 			case GLFW.GLFW_KEY_WORLD_1 -> {
-				return EncryptedString.of("World 1");
+				return "World 1";
 			}
 			case GLFW.GLFW_KEY_WORLD_2 -> {
-				return EncryptedString.of("World 2");
+				return "World 2";
 			}
 			case GLFW.GLFW_KEY_PRINT_SCREEN -> {
-				return EncryptedString.of("Print Screen");
+				return "Print Screen";
 			}
 			case GLFW.GLFW_KEY_PAUSE -> {
-				return EncryptedString.of("Pause");
+				return "Pause";
 			}
 			case GLFW.GLFW_KEY_INSERT -> {
-				return EncryptedString.of("Insert");
+				return "Insert";
 			}
 			case GLFW.GLFW_KEY_DELETE -> {
-				return EncryptedString.of("Delete");
+				return "Delete";
 			}
 			case GLFW.GLFW_KEY_HOME -> {
-				return EncryptedString.of("Home");
+				return "Home";
 			}
 			case GLFW.GLFW_KEY_PAGE_UP -> {
-				return EncryptedString.of("Page Up");
+				return "Page Up";
 			}
 			case GLFW.GLFW_KEY_PAGE_DOWN -> {
-				return EncryptedString.of("Page Down");
+				return "Page Down";
 			}
 			case GLFW.GLFW_KEY_END -> {
-				return EncryptedString.of("End");
+				return "End";
 			}
 			case GLFW.GLFW_KEY_TAB -> {
-				return EncryptedString.of("Tab");
+				return "Tab";
 			}
 			case GLFW.GLFW_KEY_LEFT_CONTROL -> {
-				return EncryptedString.of("Left Control");
+				return "Left Control";
 			}
 			case GLFW.GLFW_KEY_RIGHT_CONTROL -> {
-				return EncryptedString.of("Right Control");
+				return "Right Control";
 			}
 			case GLFW.GLFW_KEY_LEFT_ALT -> {
-				return EncryptedString.of("Left Alt");
+				return "Left Alt";
 			}
 			case GLFW.GLFW_KEY_RIGHT_ALT -> {
-				return EncryptedString.of("Right Alt");
+				return "Right Alt";
 			}
 			case GLFW.GLFW_KEY_LEFT_SHIFT -> {
-				return EncryptedString.of("Left Shift");
+				return "Left Shift";
 			}
 			case GLFW.GLFW_KEY_RIGHT_SHIFT -> {
-				return EncryptedString.of("Right Shift");
+				return "Right Shift";
 			}
 			case GLFW.GLFW_KEY_UP -> {
-				return EncryptedString.of("Arrow Up");
+				return "Arrow Up";
 			}
 			case GLFW.GLFW_KEY_DOWN -> {
-				return EncryptedString.of("Arrow Down");
+				return "Arrow Down";
 			}
 			case GLFW.GLFW_KEY_LEFT -> {
-				return EncryptedString.of("Arrow Left");
+				return "Arrow Left";
 			}
 			case GLFW.GLFW_KEY_RIGHT -> {
-				return EncryptedString.of("Arrow Right");
+				return "Arrow Right";
 			}
 			case GLFW.GLFW_KEY_APOSTROPHE -> {
-				return EncryptedString.of("Apostrophe");
+				return "Apostrophe";
 			}
 			case GLFW.GLFW_KEY_BACKSPACE -> {
-				return EncryptedString.of("Backspace");
+				return "Backspace";
 			}
 			case GLFW.GLFW_KEY_CAPS_LOCK -> {
-				return EncryptedString.of("Caps Lock");
+				return "Caps Lock";
 			}
 			case GLFW.GLFW_KEY_MENU -> {
-				return EncryptedString.of("Menu");
+				return "Menu";
 			}
 			case GLFW.GLFW_KEY_LEFT_SUPER -> {
-				return EncryptedString.of("Left Super");
+				return "Left Super";
 			}
 			case GLFW.GLFW_KEY_RIGHT_SUPER -> {
-				return EncryptedString.of("Right Super");
+				return "Right Super";
 			}
 			case GLFW.GLFW_KEY_ENTER -> {
-				return EncryptedString.of("Enter");
+				return "Enter";
 			}
 			case GLFW.GLFW_KEY_KP_ENTER -> {
-				return EncryptedString.of("Numpad Enter");
+				return "Numpad Enter";
 			}
 			case GLFW.GLFW_KEY_NUM_LOCK -> {
-				return EncryptedString.of("Num Lock");
+				return "Num Lock";
 			}
 			case GLFW.GLFW_KEY_SPACE -> {
-				return EncryptedString.of("Space");
+				return "Space";
 			}
 			case GLFW.GLFW_KEY_F1 -> {
-				return EncryptedString.of("F1");
+				return "F1";
 			}
 			case GLFW.GLFW_KEY_F2 -> {
-				return EncryptedString.of("F2");
+				return "F2";
 			}
 			case GLFW.GLFW_KEY_F3 -> {
-				return EncryptedString.of("F3");
+				return "F3";
 			}
 			case GLFW.GLFW_KEY_F4 -> {
-				return EncryptedString.of("F4");
+				return "F4";
 			}
 			case GLFW.GLFW_KEY_F5 -> {
-				return EncryptedString.of("F5");
+				return "F5";
 			}
 			case GLFW.GLFW_KEY_F6 -> {
-				return EncryptedString.of("F6");
+				return "F6";
 			}
 			case GLFW.GLFW_KEY_F7 -> {
-				return EncryptedString.of("F7");
+				return "F7";
 			}
 			case GLFW.GLFW_KEY_F8 -> {
-				return EncryptedString.of("F8");
+				return "F8";
 			}
 			case GLFW.GLFW_KEY_F9 -> {
-				return EncryptedString.of("F9");
+				return "F9";
 			}
 			case GLFW.GLFW_KEY_F10 -> {
-				return EncryptedString.of("F10");
+				return "F10";
 			}
 			case GLFW.GLFW_KEY_F11 -> {
-				return EncryptedString.of("F11");
+				return "F11";
 			}
 			case GLFW.GLFW_KEY_F12 -> {
-				return EncryptedString.of("F12");
+				return "F12";
 			}
 			case GLFW.GLFW_KEY_F13 -> {
-				return EncryptedString.of("F13");
+				return "F13";
 			}
 			case GLFW.GLFW_KEY_F14 -> {
-				return EncryptedString.of("F14");
+				return "F14";
 			}
 			case GLFW.GLFW_KEY_F15 -> {
-				return EncryptedString.of("F15");
+				return "F15";
 			}
 			case GLFW.GLFW_KEY_F16 -> {
-				return EncryptedString.of("F16");
+				return "F16";
 			}
 			case GLFW.GLFW_KEY_F17 -> {
-				return EncryptedString.of("F17");
+				return "F17";
 			}
 			case GLFW.GLFW_KEY_F18 -> {
-				return EncryptedString.of("F18");
+				return "F18";
 			}
 			case GLFW.GLFW_KEY_F19 -> {
-				return EncryptedString.of("F19");
+				return "F19";
 			}
 			case GLFW.GLFW_KEY_F20 -> {
-				return EncryptedString.of("F20");
+				return "F20";
 			}
 			case GLFW.GLFW_KEY_F21 -> {
-				return EncryptedString.of("F21");
+				return "F21";
 			}
 			case GLFW.GLFW_KEY_F22 -> {
-				return EncryptedString.of("F22");
+				return "F22";
 			}
 			case GLFW.GLFW_KEY_F23 -> {
-				return EncryptedString.of("F23");
+				return "F23";
 			}
 			case GLFW.GLFW_KEY_F24 -> {
-				return EncryptedString.of("F24");
+				return "F24";
 			}
 			case GLFW.GLFW_KEY_F25 -> {
-				return EncryptedString.of("F25");
+				return "F25";
 			}
 			case GLFW.GLFW_KEY_SCROLL_LOCK -> {
-				return EncryptedString.of("Scroll Lock");
+				return "Scroll Lock";
 			}
 			case GLFW.GLFW_KEY_LEFT_BRACKET -> {
-				return EncryptedString.of("Left Bracket");
+				return "Left Bracket";
 			}
 			case GLFW.GLFW_KEY_RIGHT_BRACKET -> {
-				return EncryptedString.of("Right Bracket");
+				return "Right Bracket";
 			}
 			case GLFW.GLFW_KEY_SEMICOLON -> {
-				return EncryptedString.of("Semicolon");
+				return "Semicolon";
 			}
 			case GLFW.GLFW_KEY_EQUAL -> {
-				return EncryptedString.of("Equals");
+				return "Equals";
 			}
 			case GLFW.GLFW_KEY_BACKSLASH -> {
-				return EncryptedString.of("Backslash");
+				return "Backslash";
 			}
 			case GLFW.GLFW_KEY_COMMA -> {
-				return EncryptedString.of("Comma");
+				return "Comma";
 			}
 			case GLFW.GLFW_MOUSE_BUTTON_LEFT -> {
-				return EncryptedString.of("LMB");
+				return "LMB";
 			}
 			case GLFW.GLFW_MOUSE_BUTTON_RIGHT -> {
-				return EncryptedString.of("RMB");
+				return "RMB";
 			}
 			default -> {
 				String keyName = GLFW.glfwGetKeyName(key, 0);
-				if (keyName == null) return EncryptedString.of("None");
+				if (keyName == null) return "None";
 				return StringUtils.capitalize(keyName);
 			}
 		}

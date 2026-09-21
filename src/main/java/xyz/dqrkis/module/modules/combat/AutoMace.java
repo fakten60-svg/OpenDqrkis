@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.MouseSimulation;
 import net.minecraft.client.gui.DrawContext;
@@ -18,20 +17,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class AutoMace extends Module implements TickListener, HudListener {
-	private final NumberSetting targetRange = new NumberSetting(EncryptedString.of("Target Range"), 1, 6, 4.5, 0.1);
-	private final NumberSetting minFallDistance = new NumberSetting(EncryptedString.of("Min Fall Distance"), 1, 10, 3, 0.1);
-	private final NumberSetting minFallVelocity = new NumberSetting(EncryptedString.of("Min Fall Velocity"), 0.1, 2, 0.3, 0.1);
-	private final NumberSetting attackCooldownTicks = new NumberSetting(EncryptedString.of("Attack Cooldown"), 0, 10, 1, 1);
-	private final BooleanSetting elytraOnly = new BooleanSetting(EncryptedString.of("Elytra Only"), true)
-			.setDescription(EncryptedString.of("Only works while gliding with an elytra"));
-	private final BooleanSetting switchBack = new BooleanSetting(EncryptedString.of("Switch Back"), true);
-	private final BooleanSetting clickSimulation = new BooleanSetting(EncryptedString.of("Click Simulation"), true);
-	private final BooleanSetting seeOnly = new BooleanSetting(EncryptedString.of("See Only"), true)
-			.setDescription(EncryptedString.of("Only targets players you can see"));
-	private final BooleanSetting checkFallVelocity = new BooleanSetting(EncryptedString.of("Check Fall Velocity"), true);
-	private final BooleanSetting waitForCrit = new BooleanSetting(EncryptedString.of("Wait For Crit"), true);
-	private final BooleanSetting breakShieldsWithAxe = new BooleanSetting(EncryptedString.of("Break Shields With Axe"), false);
-	private final BooleanSetting debugOverlay = new BooleanSetting(EncryptedString.of("Debug Overlay"), true);
+	private final NumberSetting targetRange = new NumberSetting("Target Range", 1, 6, 4.5, 0.1);
+	private final NumberSetting minFallDistance = new NumberSetting("Min Fall Distance", 1, 10, 3, 0.1);
+	private final NumberSetting minFallVelocity = new NumberSetting("Min Fall Velocity", 0.1, 2, 0.3, 0.1);
+	private final NumberSetting attackCooldownTicks = new NumberSetting("Attack Cooldown", 0, 10, 1, 1);
+	private final BooleanSetting elytraOnly = new BooleanSetting("Elytra Only", true)
+			.setDescription("Only works while gliding with an elytra");
+	private final BooleanSetting switchBack = new BooleanSetting("Switch Back", true);
+	private final BooleanSetting clickSimulation = new BooleanSetting("Click Simulation", true);
+	private final BooleanSetting seeOnly = new BooleanSetting("See Only", true)
+			.setDescription("Only targets players you can see");
+	private final BooleanSetting checkFallVelocity = new BooleanSetting("Check Fall Velocity", true);
+	private final BooleanSetting waitForCrit = new BooleanSetting("Wait For Crit", true);
+	private final BooleanSetting breakShieldsWithAxe = new BooleanSetting("Break Shields With Axe", false);
+	private final BooleanSetting debugOverlay = new BooleanSetting("Debug Overlay", true);
 
 	private int previousSlot = -1;
 	private int attackCooldown;
@@ -43,8 +42,8 @@ public final class AutoMace extends Module implements TickListener, HudListener 
 	private boolean wasHighEnough;
 
 	public AutoMace() {
-		super(EncryptedString.of("Auto Mace"),
-				EncryptedString.of("Automatically attacks with mace on fall"),
+		super("Auto Mace",
+				"Automatically attacks with mace on fall",
 				-1,
 				Category.COMBAT);
 		addSettings(targetRange, minFallDistance, minFallVelocity, attackCooldownTicks, elytraOnly,

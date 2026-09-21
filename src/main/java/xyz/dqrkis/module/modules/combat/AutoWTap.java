@@ -7,7 +7,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.MinMaxSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.TimerUtils;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.Hand;
@@ -15,9 +14,9 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 public final class AutoWTap extends Module implements PacketSendListener, HudListener {
-	private final MinMaxSetting delay = new MinMaxSetting(EncryptedString.of("Delay"), 0, 1000, 1,230, 270);
-	private final BooleanSetting inAir = new BooleanSetting(EncryptedString.of("In Air"), false)
-			.setDescription(EncryptedString.of("Whether it should W tap in air"));
+	private final MinMaxSetting delay = new MinMaxSetting("Delay", 0, 1000, 1,230, 270);
+	private final BooleanSetting inAir = new BooleanSetting("In Air", false)
+			.setDescription("Whether it should W tap in air");
 	private final TimerUtils sprintTimer = new TimerUtils();
 	private final TimerUtils tapTimer = new TimerUtils();
 	private boolean holdingForward;
@@ -26,8 +25,8 @@ public final class AutoWTap extends Module implements PacketSendListener, HudLis
 	private boolean jumpedWhileHitting;
 
 	public AutoWTap() {
-		super(EncryptedString.of("Auto WTap"),
-				EncryptedString.of("Automatically W Taps for you so the opponent takes more knockback"),
+		super("Auto WTap",
+				"Automatically W Taps for you so the opponent takes more knockback",
 				-1,
 				Category.COMBAT);
 		addSettings(delay, inAir);

@@ -7,7 +7,6 @@ import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.ModeSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.WorldUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -31,10 +30,10 @@ public final class TunnelBaseFinder extends Module implements TickListener {
     private static final int SCAN_INTERVAL_TICKS = 40;
     private static final long MIN_SESSION_MS = 5000L;
 
-    private final ModeSetting<MiningStyle> miningStyle = new ModeSetting<>(EncryptedString.of("Mining Style"), MiningStyle.AMETHYST, MiningStyle.class);
-    private final BooleanSetting spawnerCritical = new BooleanSetting(EncryptedString.of("Spawner Critical"), false);
-    private final BooleanSetting humanize = new BooleanSetting(EncryptedString.of("Humanize"), true);
-    private final NumberSetting delayRandomness = new NumberSetting(EncryptedString.of("Delay Randomness"), 0, 10, 3, 1);
+    private final ModeSetting<MiningStyle> miningStyle = new ModeSetting<>("Mining Style", MiningStyle.AMETHYST, MiningStyle.class);
+    private final BooleanSetting spawnerCritical = new BooleanSetting("Spawner Critical", false);
+    private final BooleanSetting humanize = new BooleanSetting("Humanize", true);
+    private final NumberSetting delayRandomness = new NumberSetting("Delay Randomness", 0, 10, 3, 1);
 
     private Direction tunnelDirection = Direction.NORTH;
     private int scanCounter;
@@ -47,8 +46,8 @@ public final class TunnelBaseFinder extends Module implements TickListener {
     private boolean spawnerFound;
 
     public TunnelBaseFinder() {
-        super(EncryptedString.of("Tunnel Base Finder"),
-                EncryptedString.of("Digs in tunnels until you find a base"),
+        super("Tunnel Base Finder",
+                "Digs in tunnels until you find a base",
                 -1,
                 Category.MISC);
         addSettings(miningStyle, spawnerCritical, humanize, delayRandomness);

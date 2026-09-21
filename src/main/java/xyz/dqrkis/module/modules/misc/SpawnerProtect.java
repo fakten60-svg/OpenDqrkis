@@ -7,7 +7,6 @@ import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.KeyUtils;
 import xyz.dqrkis.utils.RotationUtils;
@@ -68,8 +67,8 @@ public final class SpawnerProtect extends Module implements TickListener {
         DUMPINVENTORY
     }
 
-    private final BooleanSetting fastMode = new BooleanSetting(EncryptedString.of("Fast Mode"), true);
-    private final NumberSetting emergencyDistance = new NumberSetting(EncryptedString.of("Emergency Distance"), 1, 50, 5, 0.5);
+    private final BooleanSetting fastMode = new BooleanSetting("Fast Mode", true);
+    private final NumberSetting emergencyDistance = new NumberSetting("Emergency Distance", 1, 50, 5, 0.5);
 
     private State state = State.CHECKING;
     private final List<BlockPos> foundSpawners = new ArrayList<>();
@@ -112,8 +111,8 @@ public final class SpawnerProtect extends Module implements TickListener {
     private final NumberSetting emergencyDistSetting = emergencyDistance;
 
     public SpawnerProtect() {
-        super(EncryptedString.of("Spawner Protect"),
-                EncryptedString.of("Breaks all spawners around you when players are nearby and dumps your inventory in an e-chest"),
+        super("Spawner Protect",
+                "Breaks all spawners around you when players are nearby and dumps your inventory in an e-chest",
                 -1,
                 Category.MISC);
         addSettings(fastMode, emergencyDistance);

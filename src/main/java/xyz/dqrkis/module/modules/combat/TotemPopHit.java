@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.ItemUtils;
 import net.minecraft.entity.Entity;
@@ -19,19 +18,19 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
 public final class TotemPopHit extends Module implements TickListener, ShieldDisabledListener {
-	private final BooleanSetting swapToSword = new BooleanSetting(EncryptedString.of("Swap To Sword"), true)
-			.setDescription(EncryptedString.of("Swaps to a sword when the shield gets disabled"));
-	private final BooleanSetting switchBack = new BooleanSetting(EncryptedString.of("Switch Back"), true)
-			.setDescription(EncryptedString.of("Switches back to your previous slot"));
-	private final NumberSetting switchBackDelay = new NumberSetting(EncryptedString.of("Switch Back Delay"), 0, 5, 1, 1);
+	private final BooleanSetting swapToSword = new BooleanSetting("Swap To Sword", true)
+			.setDescription("Swaps to a sword when the shield gets disabled");
+	private final BooleanSetting switchBack = new BooleanSetting("Switch Back", true)
+			.setDescription("Switches back to your previous slot");
+	private final NumberSetting switchBackDelay = new NumberSetting("Switch Back Delay", 0, 5, 1, 1);
 
 	private boolean swapped;
 	private int previousSlot = -1;
 	private int switchClock;
 
 	public TotemPopHit() {
-		super(EncryptedString.of("Totem Pop Hit"),
-				EncryptedString.of("Attacks instantly when enemy pops a totem"),
+		super("Totem Pop Hit",
+				"Attacks instantly when enemy pops a totem",
 				-1,
 				Category.COMBAT);
 		addSettings(swapToSword, switchBack, switchBackDelay);

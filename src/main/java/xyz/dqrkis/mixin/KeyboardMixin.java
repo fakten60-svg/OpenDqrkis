@@ -4,7 +4,6 @@ import xyz.dqrkis.Dqrkis;
 import xyz.dqrkis.event.EventManager;
 import xyz.dqrkis.event.events.ButtonListener;
 import xyz.dqrkis.module.Module;
-import xyz.dqrkis.module.modules.client.SelfDestruct;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.input.KeyInput;

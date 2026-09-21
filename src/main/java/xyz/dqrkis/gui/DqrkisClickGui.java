@@ -4,7 +4,6 @@ import xyz.dqrkis.Dqrkis;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.*;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;

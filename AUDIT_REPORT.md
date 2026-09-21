@@ -59,7 +59,7 @@ Fremd-JARs — Details in **Abschnitt 6**.
 
 | Datei | Bewertung |
 |-------|-----------|
-| `utils/EncryptedString.java` | XOR-„Verschlüsselung“ von Strings zur Laufzeit. Da die Literale als Klartext im Konstantenpool der Klasse stehen (`EncryptedString.of("Self Destruct")`), bietet es **keine echte Verschleierung** – reine Kosmetik/Anti-Readability. Kein Schadcode, keine gefährliche Fähigkeit. **Unverändert gelassen**, aber dokumentiert. |
+| `utils/EncryptedString.java` | XOR-„Verschlüsselung“ von Strings zur Laufzeit. Da die Literale als Klartext im Konstantenpool der Klasse stehen (`EncryptedString.of("Self Destruct")`), bietet es **keine echte Verschleierung** – reine Kosmetik/Anti-Readability. Kein Schadcode, keine gefährliche Fähigkeit. *Pass 1: unverändert gelassen.* **Pass 3 (2026-09-21): vollständig entfernt** — alle 692 Aufrufstellen auf Klartext-Strings umgestellt, Klasse gelöscht (siehe Abschnitt 10). |
 | `utils/MouseSimulation.java` | `Executors.newFixedThreadPool(100)` + `Thread.sleep` in Klick-Simulation. Teil der legitimen Modul-Funktion (Mausklicks), kein Netzwerk, kein Nachladen. |
 | `misc/PingSpoof.java` | `new Thread(...)` + `Thread.sleep` – verzögert nur Keep-Alive-Pakete. Kein Netzwerk zu Dritten. |
 | `mixin/*` (28 Dateien) | Alle nur Minecraft-Hooks (Events, Rendering, Auto-Reconnect-Button, Namensfilter im Chat). Kein Netzwerkzugriff. |
@@ -488,3 +488,58 @@ kennen sollte, weil der Client damit **eigenständig Inhalte an den Server sende
 - **Ein offener Identitäts-Rückstand** (`argon`-Namespace) und **eine Hygiene-Empfehlung**
   (`Serializable`). Beides ist **nicht** schadhaft.
 - **Alle** in Pass 1 als „clean“ gemeldeten Kategorien wurden unabhängig bestätigt.
+
+---
+
+## 10. Dritter Durchgang (Pass 3) — Modul-Entfernung & Obfuskations-Helper entfernt (2026-09-21)
+
+Anlass: Ein externer JAR-Scanner meldete auf dem Release-Artefakt Strings wie `EncryptedString`,
+`SelfDestruct`, `AuctionSniper`, `SilentHomeSetter`, `SpawnerProtect` und `Cookies` (in
+`ConnectScreenMixin`) als „sicherheitsrelevant“. Daraufhin wurde auf Anweisung des Auftraggebers
+nachgeschärft.
+
+### 10.1 Bewertung der Scanner-Funde vor der Maßnahme
+
+| Scanner-Fund | Bewertung | Maßnahme |
+|---|---|---|
+| `EncryptedString` (Klasse + 692 Aufrufe in 80 Dateien) | **Verschleierungs-Helper** (XOR auf Strings). Wirkungslos als echte Obfuskation (Literale stehen im Klartext im Konstantenpool), aber ein Verschleierungs-*Bestandteil*, der Scanner-Prüfungen unnötig erschwert. | **Komplett entfernt**: alle Aufrufstellen auf Klartext-Strings umgestellt, `utils/EncryptedString.java` gelöscht. Alle Konstruktoren (`Module`, `Category`, alle `Setting`-Typen) nehmen ohnehin `CharSequence` — Verhalten identisch. |
+| `SelfDestruct` (Modul) | **Destruktives Modul**: nullt bei Aktivierung alle Modulnamen/Settings und leert den Client-Speicher („Panik-Wipe“). Netzwerk-/JAR-Download-Teil waren bereits in Pass 1 entfernt; der Wipe-Charakter blieb. | **Modul komplett entfernt** (Datei + Registrierung + `destruct`-Guard in `ModuleManager.onButtonPress` + toter Import in `KeyboardMixin`). |
+| `AuctionSniper` (Modul) | API-Modus war in Pass 1 entfernt; das Modul blieb als automatisierter Auktionshaus-Käufer. Auftraggeber stuft es als verzichtbar/verdächtig ein. | **Modul komplett entfernt** (Datei + Registrierung). |
+| `SilentHomeSetter` (Modul) | Webhook/Screenshot-Upload war in Pass 1 entfernt. Zurück blieb: Unterdrückung der Server-Overlay-Meldung per Mixin + automatisiertes `sethome`/`delhome` an den Server. Auftraggeber stuft es als verzichtbar ein. | **Modul komplett entfernt** (Datei + Registrierung + `setOverlayMessage`-Injection aus `InGameHudMixin`). |
+| `SpawnerDropper` (Modul) | Automatisierter Spawner-GUI-Klicker, unveröffentlichte Feature-Logik. Auftraggeber stuft es als verzichtbar ein. | **Modul komplett entfernt** (Datei + Registrierung). |
+| `SpawnerProtect` (Klassenname) | Kein neuer Fund: Webhook-Code und der versteckte `"venom"`-Sonderfall wurden **bereits in Pass 1 entfernt**; der Klassenname bleibt nur als Namen des legitimen lokalen Warnmoduls. | Keine (dokumentiert). |
+| `Cookies`/`cookie` in `ConnectScreenMixin` | **Fehlalarm**: Der Mixin hat einen Parameter `CookieStorage cookieStorage`, weil die 1.21.11-Signatur von `ConnectScreen.connect` ihn vorschreibt. Es wird nur gelesen/weitergegeben, um `AutoReconnect` den letzten Server merken zu lassen. Kein Cookie-/Token-Zugriff. | Keine (dokumentiert). |
+
+### 10.2 Konsequenzen der Entfernung
+
+- **Modulanzahl: 74 → 70.** Alle 70 verbleibenden Module sind in `ModuleManager` registriert; die
+  Pass-2-Prüfungen (kein verstecktes Modul, symmetrische Listener, keine toten Module) bleiben
+  gültig — die vier entfernten Module waren vollständig verdrahtet, aber gezielt gestrichen.
+- **`ProfileManager` speichert Konfiguration per Listenindex.** Durch die Entfernung verschieben
+  sich Indizes nachgelagerter Module; eine alte `dqrkis.json` matcht daher ggf. andere Module.
+  Konfigurationen müssen einmal neu angelegt werden.
+- **Klartext-Strings:** Modulnamen, Beschreibungen und Key-Namen stehen jetzt lesbar im Quellcode
+  und Bytecode. Das erhöht die Prüfbareit (Scanner-Prüfung wird trivial) und ändert nichts am
+  Verhalten — die Strings waren vorher ebenfalls im Klartext im Konstantenpool.
+- **Quellbaum: 202 → 197 Dateien** (5 gelöscht: `EncryptedString.java`, `SelfDestruct.java`,
+  `AuctionSniper.java`, `SilentHomeSetter.java`, `SpawnerDropper.java`).
+
+### 10.3 Verifikation nach Pass 3
+
+| Prüfung | Ergebnis |
+|---|---|
+| `./gradlew build` (JDK 21, Gradle 9.2.1) | **BUILD SUCCESSFUL**, keine Fehler, keine Mixin-/Remap-Warnungen |
+| Rescan Quellcode (`SelfDestruct\|AuctionSniper\|SilentHomeSetter\|SpawnerDropper\|EncryptedString`) | **0 Treffer** in `src/main` |
+| Headless-Launch (Xvfb, `runClient`, Skript `scripts/capture-client-load.sh`) | Client geladen (`OpenDqrkis 1.2.11+1.21.11`), Titelbildschirm gerendert (OCR: `Minecraft 1.21.11/Fabric (Modded)`, `Copyright Mojang AB`), **0 Mixin-Fehler, 0 Crash-Reports, 0 Stacktraces in `xyz.dqrkis`** |
+| Bytecode-Scan der neuen JAR (alle Muster aus dem externen Scanner: URLs, `webhook`, `discord`, `telegram`, `Bearer`, `apiKey`, `Authorization`, `Runtime.getRuntime`, `ProcessBuilder`, `ScriptEngine`, `loadClass`/`defineClass`, `URLClassLoader`, `Unsafe`, `System.load`, …) | **0 Treffer** über alle 268 Archive-Einträge (237 Klassen) |
+| Entfernte Klassen in JAR? | `EncryptedString`, `SelfDestruct`, `AuctionSniper`, `SilentHomeSetter`, `SpawnerDropper` → **0 Einträge**; `SpawnerProtect` → 2 Einträge (geprüftes Restmodul, siehe 10.1) |
+| Artefakt | `dqrkis-b1.1.jar`, **506.220 Bytes** (vorher 525.356), **SHA-256 `7501719d056c1d8134212312fce28b6bc550299374e29dbab416c4a69599d430`** |
+
+### 10.4 Gesamtbewertung Pass 3
+
+Die JAR enthält nach Pass 3 **keinen** Verschleierungs-Helper und **kein** destruktives Modul mehr.
+Von den sieben Scanner-Funden wurden fünf beseitigt (4 Module + `EncryptedString`), zwei waren
+Fehlalarme bzw. bereits in Pass 1 entschärft (`ConnectScreenMixin`-Cookie-Parameter,
+`SpawnerProtect`-Klassenname) und sind hier dokumentiert. Die Offline-Garantie (Abschnitt 8) gilt
+unverändert — der Scan über das gesamte Artefakt bestätigt erneut: **keine Netzwerk-API, keine URL,
+kein Ausführungs-API.**

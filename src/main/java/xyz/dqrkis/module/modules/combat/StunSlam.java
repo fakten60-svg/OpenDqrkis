@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.ModeSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.ItemUtils;
 import xyz.dqrkis.utils.WorldUtils;
@@ -18,12 +17,12 @@ import net.minecraft.util.Hand;
 public final class StunSlam extends Module implements TickListener {
 	private enum WeaponMode { Mace, Density, Breach }
 
-	private final NumberSetting minFallDistance = new NumberSetting(EncryptedString.of("Min Fall Distance"), 0, 10, 1.5, 0.1)
-			.setDescription(EncryptedString.of("Only strikes after falling this far"));
-	private final ModeSetting<WeaponMode> weapon = new ModeSetting<>(EncryptedString.of("Weapon"), WeaponMode.Mace, WeaponMode.class)
-			.setDescription(EncryptedString.of("Which mace variant to swap to"));
-	private final NumberSetting cooldown = new NumberSetting(EncryptedString.of("Cooldown"), 0, 20, 0, 1)
-			.setDescription(EncryptedString.of("Ticks to wait between combos"));
+	private final NumberSetting minFallDistance = new NumberSetting("Min Fall Distance", 0, 10, 1.5, 0.1)
+			.setDescription("Only strikes after falling this far");
+	private final ModeSetting<WeaponMode> weapon = new ModeSetting<>("Weapon", WeaponMode.Mace, WeaponMode.class)
+			.setDescription("Which mace variant to swap to");
+	private final NumberSetting cooldown = new NumberSetting("Cooldown", 0, 20, 0, 1)
+			.setDescription("Ticks to wait between combos");
 
 	private enum State { IDLE, AXE_SWAPPED, MACE_SWAPPED }
 
@@ -32,8 +31,8 @@ public final class StunSlam extends Module implements TickListener {
 	private PlayerEntity target;
 
 	public StunSlam() {
-		super(EncryptedString.of("Stun Slam"),
-				EncryptedString.of("Stuns your enemy with an axe then slams with a mace"),
+		super("Stun Slam",
+				"Stuns your enemy with an axe then slams with a mace",
 				-1,
 				Category.COMBAT);
 		addSettings(minFallDistance, weapon, cooldown);

@@ -5,17 +5,16 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.StringSetting;
-import xyz.dqrkis.utils.EncryptedString;
 
 public final class NameHider extends Module {
-	private final StringSetting fakeName = new StringSetting(EncryptedString.of("Fake Name"), EncryptedString.of("Player").toString());
-	private final BooleanSetting hideInChat = new BooleanSetting(EncryptedString.of("Hide In Chat"), true);
-	private final BooleanSetting hideInTab = new BooleanSetting(EncryptedString.of("Hide In Tab"), true);
-	private final BooleanSetting hideNametag = new BooleanSetting(EncryptedString.of("Hide Nametag"), true);
+	private final StringSetting fakeName = new StringSetting("Fake Name", "Player");
+	private final BooleanSetting hideInChat = new BooleanSetting("Hide In Chat", true);
+	private final BooleanSetting hideInTab = new BooleanSetting("Hide In Tab", true);
+	private final BooleanSetting hideNametag = new BooleanSetting("Hide Nametag", true);
 
 	public NameHider() {
-		super(EncryptedString.of("Name Hider"),
-				EncryptedString.of("Hides your name everywhere"),
+		super("Name Hider",
+				"Hides your name everywhere",
 				-1,
 				Category.RENDER);
 		addSettings(fakeName, hideInChat, hideInTab, hideNametag);

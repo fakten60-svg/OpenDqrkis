@@ -17,47 +17,47 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 public final class AimAssist extends Module implements HudListener, MouseMoveListener {
-	private final BooleanSetting stickyAim = new BooleanSetting(EncryptedString.of("Sticky Aim"), false)
-			.setDescription(EncryptedString.of("Aims at the last attacked player"));
+	private final BooleanSetting stickyAim = new BooleanSetting("Sticky Aim", false)
+			.setDescription("Aims at the last attacked player");
 
-	private final BooleanSetting onlyWeapon = new BooleanSetting(EncryptedString.of("Only Weapon"), true);
+	private final BooleanSetting onlyWeapon = new BooleanSetting("Only Weapon", true);
 
-	private final BooleanSetting onLeftClick = new BooleanSetting(EncryptedString.of("On Left Click"), false)
-			.setDescription(EncryptedString.of("Only gets triggered if holding down left click"));
-	private final ModeSetting<AimMode> aimAt = new ModeSetting<>(EncryptedString.of("Aim At"), AimMode.Head, AimMode.class);
+	private final BooleanSetting onLeftClick = new BooleanSetting("On Left Click", false)
+			.setDescription("Only gets triggered if holding down left click");
+	private final ModeSetting<AimMode> aimAt = new ModeSetting<>("Aim At", AimMode.Head, AimMode.class);
 
-	private final BooleanSetting stopAtTargetVertical = new BooleanSetting(EncryptedString.of("Stop at Target Vert"), true)
-			.setDescription(EncryptedString.of("Stops vertically assisting if already aiming at the entity, helps bypass anti-cheat"));
+	private final BooleanSetting stopAtTargetVertical = new BooleanSetting("Stop at Target Vert", true)
+			.setDescription("Stops vertically assisting if already aiming at the entity, helps bypass anti-cheat");
 
-	private final BooleanSetting stopAtTargetHorizontal = new BooleanSetting(EncryptedString.of("Stop at Target Horiz"), false)
-			.setDescription(EncryptedString.of("Stops horizontally assisting if already aiming at the entity, helps bypass anti-cheat"));
+	private final BooleanSetting stopAtTargetHorizontal = new BooleanSetting("Stop at Target Horiz", false)
+			.setDescription("Stops horizontally assisting if already aiming at the entity, helps bypass anti-cheat");
 
-	private final NumberSetting radius = new NumberSetting(EncryptedString.of("Radius"), 0.1, 6, 5, 0.1);
+	private final NumberSetting radius = new NumberSetting("Radius", 0.1, 6, 5, 0.1);
 
-	private final BooleanSetting seeOnly = new BooleanSetting(EncryptedString.of("See Only"), true);
-	private final BooleanSetting lookAtNearest = new BooleanSetting(EncryptedString.of("Look at Nearest"), false);
+	private final BooleanSetting seeOnly = new BooleanSetting("See Only", true);
+	private final BooleanSetting lookAtNearest = new BooleanSetting("Look at Nearest", false);
 
-	private final NumberSetting fov = new NumberSetting(EncryptedString.of("FOV"), 5, 360, 180, 1);
+	private final NumberSetting fov = new NumberSetting("FOV", 5, 360, 180, 1);
 
-	private final MinMaxSetting pitchSpeed = new MinMaxSetting(EncryptedString.of("Vertical Speed"), 0, 10, 0.1, 2, 4);
-	private final MinMaxSetting yawSpeed = new MinMaxSetting(EncryptedString.of("Horizontal Speed"), 0, 10, 0.1, 2, 4);
+	private final MinMaxSetting pitchSpeed = new MinMaxSetting("Vertical Speed", 0, 10, 0.1, 2, 4);
+	private final MinMaxSetting yawSpeed = new MinMaxSetting("Horizontal Speed", 0, 10, 0.1, 2, 4);
 
-	private final NumberSetting speedChange = new NumberSetting(EncryptedString.of("Speed Delay"), 0, 1000, 250, 1)
-			.setDescription(EncryptedString.of("Time in milliseconds to wait after resetting random speed"));
+	private final NumberSetting speedChange = new NumberSetting("Speed Delay", 0, 1000, 250, 1)
+			.setDescription("Time in milliseconds to wait after resetting random speed");
 
-	private final NumberSetting randomization = new NumberSetting(EncryptedString.of("Chance"), 0, 100, 50, 1);
+	private final NumberSetting randomization = new NumberSetting("Chance", 0, 100, 50, 1);
 
-	private final BooleanSetting yawAssist = new BooleanSetting(EncryptedString.of("Horizontal"), true);
-	private final BooleanSetting pitchAssist = new BooleanSetting(EncryptedString.of("Vertical"), true);
+	private final BooleanSetting yawAssist = new BooleanSetting("Horizontal", true);
+	private final BooleanSetting pitchAssist = new BooleanSetting("Vertical", true);
 
-	private final NumberSetting waitFor = new NumberSetting(EncryptedString.of("Wait on Move"), 0, 1000, 0, 1)
-			.setDescription(EncryptedString.of("After you move your mouse aim assist will stop working for the selected amount of time"));
+	private final NumberSetting waitFor = new NumberSetting("Wait on Move", 0, 1000, 0, 1)
+			.setDescription("After you move your mouse aim assist will stop working for the selected amount of time");
 
-	private final ModeSetting<LerpMode> lerp = new ModeSetting<>(EncryptedString.of("Lerp"), LerpMode.Normal, LerpMode.class)
-			.setDescription(EncryptedString.of("Linear interpolation to use to rotate"));
+	private final ModeSetting<LerpMode> lerp = new ModeSetting<>("Lerp", LerpMode.Normal, LerpMode.class)
+			.setDescription("Linear interpolation to use to rotate");
 
-	private final ModeSetting<PosMode> posMode = new ModeSetting<>(EncryptedString.of("Pos mode"), PosMode.Normal, PosMode.class)
-			.setDescription(EncryptedString.of("Precision of the target position"));
+	private final ModeSetting<PosMode> posMode = new ModeSetting<>("Pos mode", PosMode.Normal, PosMode.class)
+			.setDescription("Precision of the target position");
 
 	private final TimerUtils timer = new TimerUtils();
 	private final TimerUtils resetSpeed = new TimerUtils();
@@ -78,8 +78,8 @@ public final class AimAssist extends Module implements HudListener, MouseMoveLis
 	}
 
 	public AimAssist() {
-		super(EncryptedString.of("Aim Assist"),
-				EncryptedString.of("Automatically aims at players for you"),
+		super("Aim Assist",
+				"Automatically aims at players for you",
 				-1,
 				Category.COMBAT);
 

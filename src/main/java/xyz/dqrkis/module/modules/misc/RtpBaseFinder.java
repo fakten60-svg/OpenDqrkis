@@ -4,7 +4,6 @@ import xyz.dqrkis.event.events.TickListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.ModeSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.WorldUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
@@ -26,7 +25,7 @@ public final class RtpBaseFinder extends Module implements TickListener {
 	private static final long STABILIZE_MS = 2500L;
 	private static final float ROTATE_SPEED = 4.0F;
 
-	private final ModeSetting<Region> region = new ModeSetting<>(EncryptedString.of("Region"), Region.Random, Region.class);
+	private final ModeSetting<Region> region = new ModeSetting<>("Region", Region.Random, Region.class);
 
 	private long worldReadyTime = -1L;
 	private boolean waitingForWorld = true;
@@ -37,8 +36,8 @@ public final class RtpBaseFinder extends Module implements TickListener {
 	private int chests;
 
 	public RtpBaseFinder() {
-		super(EncryptedString.of("RTP Base Finder"),
-				EncryptedString.of("Finds bases by digging down"),
+		super("RTP Base Finder",
+				"Finds bases by digging down",
 				-1,
 				Category.MISC);
 		addSettings(region);

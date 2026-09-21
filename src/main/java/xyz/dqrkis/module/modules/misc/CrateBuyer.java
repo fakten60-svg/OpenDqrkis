@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.ModeSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
@@ -18,7 +17,7 @@ public final class CrateBuyer extends Module implements TickListener {
 	private static final int CONFIRM_SLOT = 15;
 	private static final int CLICKS_PER_ACTION = 4;
 
-	private final ModeSetting<CrateAction> action = new ModeSetting<>(EncryptedString.of("Action"), CrateAction.All, CrateAction.class);
+	private final ModeSetting<CrateAction> action = new ModeSetting<>("Action", CrateAction.All, CrateAction.class);
 
 	private int tickCounter;
 	private int messageCooldown;
@@ -27,8 +26,8 @@ public final class CrateBuyer extends Module implements TickListener {
 	private boolean validScreenSeen;
 
 	public CrateBuyer() {
-		super(EncryptedString.of("Crate Buyer"),
-				EncryptedString.of("Automatically buys items from the common crate"),
+		super("Crate Buyer",
+				"Automatically buys items from the common crate",
 				-1,
 				Category.MISC);
 		addSettings(action);

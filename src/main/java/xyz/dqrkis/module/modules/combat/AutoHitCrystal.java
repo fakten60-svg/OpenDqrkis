@@ -19,19 +19,19 @@ import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
 
 public final class AutoHitCrystal extends Module implements TickListener, ItemUseListener, AttackListener {
-	private final KeybindSetting activateKey = new KeybindSetting(EncryptedString.of("Activate Key"), GLFW.GLFW_MOUSE_BUTTON_RIGHT, false)
-			.setDescription(EncryptedString.of("Key that does hit crystalling"));
-	private final BooleanSetting checkPlace = new BooleanSetting(EncryptedString.of("Check Place"), false)
-			.setDescription(EncryptedString.of("Checks if you can place the obsidian on that block"));
-	private final NumberSetting switchDelay = new NumberSetting(EncryptedString.of("Switch Delay"), 0, 20, 0, 1);
-	private final NumberSetting switchChance = new NumberSetting(EncryptedString.of("Switch Chance"), 0, 100, 100, 1);
-	private final NumberSetting placeDelay = new NumberSetting(EncryptedString.of("Place Delay"), 0, 20, 0, 1);
-	private final NumberSetting placeChance = new NumberSetting(EncryptedString.of("Place Chance"), 0, 100, 100, 1).setDescription(EncryptedString.of("Randomization"));
-	private final BooleanSetting workWithTotem = new BooleanSetting(EncryptedString.of("Work With Totem"), false);
-	private final BooleanSetting workWithCrystal = new BooleanSetting(EncryptedString.of("Work With Crystal"), false);
-	private final BooleanSetting clickSimulation = new BooleanSetting(EncryptedString.of("Click Simulation"), false)
-			.setDescription(EncryptedString.of("Makes the CPS hud think you're legit"));
-	private final BooleanSetting swordSwap = new BooleanSetting(EncryptedString.of("Sword Swap"), true);
+	private final KeybindSetting activateKey = new KeybindSetting("Activate Key", GLFW.GLFW_MOUSE_BUTTON_RIGHT, false)
+			.setDescription("Key that does hit crystalling");
+	private final BooleanSetting checkPlace = new BooleanSetting("Check Place", false)
+			.setDescription("Checks if you can place the obsidian on that block");
+	private final NumberSetting switchDelay = new NumberSetting("Switch Delay", 0, 20, 0, 1);
+	private final NumberSetting switchChance = new NumberSetting("Switch Chance", 0, 100, 100, 1);
+	private final NumberSetting placeDelay = new NumberSetting("Place Delay", 0, 20, 0, 1);
+	private final NumberSetting placeChance = new NumberSetting("Place Chance", 0, 100, 100, 1).setDescription("Randomization");
+	private final BooleanSetting workWithTotem = new BooleanSetting("Work With Totem", false);
+	private final BooleanSetting workWithCrystal = new BooleanSetting("Work With Crystal", false);
+	private final BooleanSetting clickSimulation = new BooleanSetting("Click Simulation", false)
+			.setDescription("Makes the CPS hud think you're legit");
+	private final BooleanSetting swordSwap = new BooleanSetting("Sword Swap", true);
 
 	private int placeClock = 0;
 	private int switchClock = 0;
@@ -40,8 +40,8 @@ public final class AutoHitCrystal extends Module implements TickListener, ItemUs
 	private boolean crystalSelected;
 
 	public AutoHitCrystal() {
-		super(EncryptedString.of("Auto Hit Crystal"),
-				EncryptedString.of("Automatically hit-crystals for you"),
+		super("Auto Hit Crystal",
+				"Automatically hit-crystals for you",
 				-1,
 				Category.COMBAT);
 		addSettings(activateKey, checkPlace, switchDelay, switchChance, placeDelay, placeChance, workWithTotem, workWithCrystal, clickSimulation, swordSwap);

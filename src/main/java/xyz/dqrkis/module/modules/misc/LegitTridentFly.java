@@ -5,7 +5,6 @@ import xyz.dqrkis.mixin.ClientPlayerInteractionManagerAccessor;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
@@ -17,8 +16,8 @@ public final class LegitTridentFly extends Module implements TickListener {
 	private long lastNanoTime;
 
 	public LegitTridentFly() {
-		super(EncryptedString.of("Legit Trident Fly"),
-				EncryptedString.of("Undetectable Trident Fly. Requires Rain, RipTide"),
+		super("Legit Trident Fly",
+				"Undetectable Trident Fly. Requires Rain, RipTide",
 				-1,
 				Category.MISC);
 	}

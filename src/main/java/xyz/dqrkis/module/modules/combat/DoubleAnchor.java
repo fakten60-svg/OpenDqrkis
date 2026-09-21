@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.utils.BlockUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.util.Hand;
@@ -15,8 +14,8 @@ import org.lwjgl.glfw.GLFW;
 
 public final class DoubleAnchor extends Module implements TickListener {
 	public DoubleAnchor() {
-		super(EncryptedString.of("Double Anchor"),
-				EncryptedString.of("Helps you do the air place/double anchor"),
+		super("Double Anchor",
+				"Helps you do the air place/double anchor",
 				-1,
 				Category.COMBAT);
 	}

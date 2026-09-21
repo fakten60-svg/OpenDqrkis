@@ -7,7 +7,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.modules.client.ClickGUI;
 import xyz.dqrkis.module.setting.BooleanSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.RenderUtils;
 import xyz.dqrkis.utils.TextRenderer;
 import xyz.dqrkis.utils.Utils;
@@ -18,14 +17,14 @@ import java.awt.*;
 import java.util.List;
 
 public final class HUD extends Module implements HudListener {
-	private static final CharSequence brand = EncryptedString.of("Dqrkis |");
-	private final BooleanSetting info = new BooleanSetting(EncryptedString.of("Info"), true);
+	private static final CharSequence brand = "Dqrkis |";
+	private final BooleanSetting info = new BooleanSetting("Info", true);
 	private final BooleanSetting modules = new BooleanSetting("Modules", true)
-			.setDescription(EncryptedString.of("Renders module array list"));
+			.setDescription("Renders module array list");
 
 	public HUD() {
-		super(EncryptedString.of("HUD"),
-				EncryptedString.of("Renders the client version and enabled modules on the HUD"),
+		super("HUD",
+				"Renders the client version and enabled modules on the HUD",
 				-1,
 				Category.RENDER);
 		addSettings(info, modules);

@@ -7,7 +7,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -19,24 +18,24 @@ import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class LootYeeter extends Module implements TickListener {
-	private final NumberSetting minTotems = new NumberSetting(EncryptedString.of("Min Totems"), 0, 36, 6, 1)
-			.setDescription(EncryptedString.of("Keeps at least this many totems"));
-	private final NumberSetting minPearls = new NumberSetting(EncryptedString.of("Min Pearls"), 0, 576, 64, 1)
-			.setDescription(EncryptedString.of("Keeps at least this many pearls"));
-	private final BooleanSetting totemsFirst = new BooleanSetting(EncryptedString.of("Totems First"), false)
-			.setDescription(EncryptedString.of("Checks totem overflow before pearl overflow"));
-	private final NumberSetting throwDelay = new NumberSetting(EncryptedString.of("Throw Delay"), 0, 10, 0, 1)
-			.setDescription(EncryptedString.of("Ticks between throws"));
-	private final KeybindSetting yeetKey = new KeybindSetting(EncryptedString.of("Throw Key"), GLFW.GLFW_KEY_X, false)
-			.setDescription(EncryptedString.of("Hold this key to throw junk items"));
-	private final BooleanSetting randomSlot = new BooleanSetting(EncryptedString.of("Random Slot"), true)
-			.setDescription(EncryptedString.of("Picks a random matching slot instead of the first one"));
+	private final NumberSetting minTotems = new NumberSetting("Min Totems", 0, 36, 6, 1)
+			.setDescription("Keeps at least this many totems");
+	private final NumberSetting minPearls = new NumberSetting("Min Pearls", 0, 576, 64, 1)
+			.setDescription("Keeps at least this many pearls");
+	private final BooleanSetting totemsFirst = new BooleanSetting("Totems First", false)
+			.setDescription("Checks totem overflow before pearl overflow");
+	private final NumberSetting throwDelay = new NumberSetting("Throw Delay", 0, 10, 0, 1)
+			.setDescription("Ticks between throws");
+	private final KeybindSetting yeetKey = new KeybindSetting("Throw Key", GLFW.GLFW_KEY_X, false)
+			.setDescription("Hold this key to throw junk items");
+	private final BooleanSetting randomSlot = new BooleanSetting("Random Slot", true)
+			.setDescription("Picks a random matching slot instead of the first one");
 
 	private int throwIn;
 
 	public LootYeeter() {
-		super(EncryptedString.of("Loot Yeeter"),
-				EncryptedString.of("Throws away junk items from your inventory"),
+		super("Loot Yeeter",
+				"Throws away junk items from your inventory",
 				-1,
 				Category.MISC);
 		addSettings(minTotems, minPearls, totemsFirst, throwDelay, yeetKey, randomSlot);

@@ -6,7 +6,6 @@ import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.module.setting.StringSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.SlotActionType;
@@ -16,8 +15,8 @@ public final class AhSell extends Module implements TickListener {
 	private static final int GUI_TIMEOUT_TICKS = 10;
 	private static final int CONFIRM_DELAY_TICKS = 2;
 
-	private final StringSetting sellPrice = new StringSetting(EncryptedString.of("Sell Price"), EncryptedString.of("15000").toString());
-	private final NumberSetting delay = new NumberSetting(EncryptedString.of("Delay (ticks)"), 5, 100, 20, 1);
+	private final StringSetting sellPrice = new StringSetting("Sell Price", "15000".toString());
+	private final NumberSetting delay = new NumberSetting("Delay (ticks)", 5, 100, 20, 1);
 
 	private int delayTicks;
 	private State state = State.IDLE;
@@ -26,8 +25,8 @@ public final class AhSell extends Module implements TickListener {
 	private enum State { IDLE, WAITING_FOR_GUI, CLICKING_CONFIRM }
 
 	public AhSell() {
-		super(EncryptedString.of("Ah Sell"),
-				EncryptedString.of("Automatically sells items from your hotbar."),
+		super("Ah Sell",
+				"Automatically sells items from your hotbar.",
 				-1,
 				Category.MISC);
 		addSettings(sellPrice, delay);

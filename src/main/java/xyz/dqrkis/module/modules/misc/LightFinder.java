@@ -5,7 +5,6 @@ import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
@@ -21,15 +20,15 @@ import java.util.List;
 import java.util.Set;
 
 public final class LightFinder extends Module implements TickListener {
-    private final NumberSetting scanRadius = new NumberSetting(EncryptedString.of("Scan Radius"), 1, 16, 4, 1);
-    private final NumberSetting maxY = new NumberSetting(EncryptedString.of("Max Y"), 10, 120, 50, 5);
-    private final NumberSetting minY = new NumberSetting(EncryptedString.of("Min Y"), -64, 60, -60, 5);
-    private final NumberSetting lightThreshold = new NumberSetting(EncryptedString.of("Light Threshold"), 1, 15, 8, 1);
-    private final NumberSetting minCluster = new NumberSetting(EncryptedString.of("Min Cluster"), 2, 30, 5, 1);
-    private final NumberSetting clusterRadius = new NumberSetting(EncryptedString.of("Cluster Radius"), 3, 24, 8, 1);
-    private final NumberSetting scanInterval = new NumberSetting(EncryptedString.of("Scan Interval"), 10, 300, 60, 10);
-    private final BooleanSetting ignoreLava = new BooleanSetting(EncryptedString.of("Ignore Lava"), true);
-    private final BooleanSetting showCoords = new BooleanSetting(EncryptedString.of("Show Coords"), true);
+    private final NumberSetting scanRadius = new NumberSetting("Scan Radius", 1, 16, 4, 1);
+    private final NumberSetting maxY = new NumberSetting("Max Y", 10, 120, 50, 5);
+    private final NumberSetting minY = new NumberSetting("Min Y", -64, 60, -60, 5);
+    private final NumberSetting lightThreshold = new NumberSetting("Light Threshold", 1, 15, 8, 1);
+    private final NumberSetting minCluster = new NumberSetting("Min Cluster", 2, 30, 5, 1);
+    private final NumberSetting clusterRadius = new NumberSetting("Cluster Radius", 3, 24, 8, 1);
+    private final NumberSetting scanInterval = new NumberSetting("Scan Interval", 10, 300, 60, 10);
+    private final BooleanSetting ignoreLava = new BooleanSetting("Ignore Lava", true);
+    private final BooleanSetting showCoords = new BooleanSetting("Show Coords", true);
 
     private int ticksSinceScan;
     private final Set<Long> scannedChunks = new HashSet<>();
@@ -38,8 +37,8 @@ public final class LightFinder extends Module implements TickListener {
     private record LightCluster(BlockPos center, int lightCount) {}
 
     public LightFinder() {
-        super(EncryptedString.of("Light Finder"),
-                EncryptedString.of("Finds underground bases using light data analysis"),
+        super("Light Finder",
+                "Finds underground bases using light data analysis",
                 -1,
                 Category.MISC);
         addSettings(scanRadius, maxY, minY, lightThreshold, minCluster, clusterRadius, scanInterval, ignoreLava, showCoords);

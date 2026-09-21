@@ -1,6 +1,5 @@
 package xyz.dqrkis.font;
 
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.gui.DrawContext;
 import org.joml.Matrix3x2fStack;
 
@@ -589,6 +588,6 @@ public final class GlyphPageFontRenderer {
 			}
 		}
 
-		return EncryptedString.of(stringbuilder.toString());
+		return stringbuilder.toString();
 	}
 }

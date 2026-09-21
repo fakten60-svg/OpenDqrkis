@@ -3,7 +3,6 @@ package xyz.dqrkis.module.modules.misc;
 import xyz.dqrkis.event.events.TickListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.decoration.ArmorStandEntity;
@@ -16,8 +15,8 @@ public final class AntiTrap extends Module implements TickListener {
 	private final Set<Entity> hiddenEntities = new HashSet<>();
 
 	public AntiTrap() {
-		super(EncryptedString.of("Anti Trap"),
-				EncryptedString.of("Helps you escape traps by removing certain entities."),
+		super("Anti Trap",
+				"Helps you escape traps by removing certain entities.",
 				-1,
 				Category.MISC);
 	}

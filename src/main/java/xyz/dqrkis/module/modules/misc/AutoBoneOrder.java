@@ -7,16 +7,15 @@ import xyz.dqrkis.module.setting.ItemSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
 import xyz.dqrkis.module.setting.StringSetting;
 import xyz.dqrkis.utils.ChatUtils;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.SlotActionType;
 
 public final class AutoBoneOrder extends Module implements TickListener {
-    private final StringSetting orderName = new StringSetting(EncryptedString.of("Order Name"), "bones");
-    private final ItemSetting orderItem = new ItemSetting(EncryptedString.of("Order Item"), Items.BONE);
-    private final NumberSetting clickDelay = new NumberSetting(EncryptedString.of("Click Delay (ticks)"), 1, 10, 2, 1);
-    private final NumberSetting guiTimeout = new NumberSetting(EncryptedString.of("GUI Timeout (ticks)"), 20, 200, 60, 5);
+    private final StringSetting orderName = new StringSetting("Order Name", "bones");
+    private final ItemSetting orderItem = new ItemSetting("Order Item", Items.BONE);
+    private final NumberSetting clickDelay = new NumberSetting("Click Delay (ticks)", 1, 10, 2, 1);
+    private final NumberSetting guiTimeout = new NumberSetting("GUI Timeout (ticks)", 20, 200, 60, 5);
 
     private enum State { IDLE, OPEN_ORDERS, WAIT_ORDERS_GUI, CLICK_SLOT_51, WAIT_SECOND_GUI, CLICK_TARGET_ITEM, WAIT_THIRD_GUI, CLICK_CHEST_SLOT, WAIT_ITEMS_GUI, COLLECT_ITEMS }
     private State state = State.IDLE;
@@ -24,7 +23,7 @@ public final class AutoBoneOrder extends Module implements TickListener {
     private long stateEnteredAt;
 
     public AutoBoneOrder() {
-        super(EncryptedString.of("Auto Bone Order"), EncryptedString.of("Automates ordering bones"), -1, Category.MISC);
+        super("Auto Bone Order", "Automates ordering bones", -1, Category.MISC);
         addSettings(orderName, orderItem, clickDelay, guiTimeout);
     }
 

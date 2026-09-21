@@ -7,7 +7,6 @@ import xyz.dqrkis.module.setting.BooleanSetting;
 import xyz.dqrkis.module.setting.KeybindSetting;
 import xyz.dqrkis.module.setting.ModeSetting;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.InventoryUtils;
 import xyz.dqrkis.utils.KeyUtils;
 import net.minecraft.item.BowItem;
@@ -23,14 +22,14 @@ import net.minecraft.item.Items;
 
 public final class AutoCart extends Module implements TickListener {
     public enum Weapon { BOW, CROSSBOW }
-    private final KeybindSetting activateKey = new KeybindSetting(EncryptedString.of("Activate Key"), 1, false);
-    private final NumberSetting delay = new NumberSetting(EncryptedString.of("Delay"), 0, 10, 0, 1);
-    private final BooleanSetting autoShoot = new BooleanSetting(EncryptedString.of("Auto Shoot"), false);
-    private final ModeSetting<Weapon> weapon = new ModeSetting<>(EncryptedString.of("Weapon"), Weapon.BOW, Weapon.class);
-    private final NumberSetting bowCharge = new NumberSetting(EncryptedString.of("Bow Charge"), 3, 20, 8, 1);
+    private final KeybindSetting activateKey = new KeybindSetting("Activate Key", 1, false);
+    private final NumberSetting delay = new NumberSetting("Delay", 0, 10, 0, 1);
+    private final BooleanSetting autoShoot = new BooleanSetting("Auto Shoot", false);
+    private final ModeSetting<Weapon> weapon = new ModeSetting<>("Weapon", Weapon.BOW, Weapon.class);
+    private final NumberSetting bowCharge = new NumberSetting("Bow Charge", 3, 20, 8, 1);
     private BlockPos railPos; private int state; private int delayTicks; private int chargeTicks;
     public AutoCart() {
-        super(EncryptedString.of("Auto Cart"), EncryptedString.of("Places rail and minecart"), -1, Category.CART);
+        super("Auto Cart", "Places rail and minecart", -1, Category.CART);
         addSettings(activateKey, delay, autoShoot, weapon, bowCharge);
     }
     @Override public void onEnable() { eventManager.add(TickListener.class, this); state=0; delayTicks=0; chargeTicks=0; railPos=null; super.onEnable(); }

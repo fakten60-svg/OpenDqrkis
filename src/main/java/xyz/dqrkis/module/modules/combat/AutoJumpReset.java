@@ -4,15 +4,14 @@ import xyz.dqrkis.event.events.TickListener;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import xyz.dqrkis.utils.MathUtils;
 
 public final class AutoJumpReset extends Module implements TickListener {
-	private final NumberSetting chance = new NumberSetting(EncryptedString.of("Chance"), 0, 100, 100, 1);
+	private final NumberSetting chance = new NumberSetting("Chance", 0, 100, 100, 1);
 
 	public AutoJumpReset() {
-		super(EncryptedString.of("Auto Jump Reset"),
-				EncryptedString.of("Automatically jumps for you when you get hit so you take less knockback (not good for crystal pvp)"),
+		super("Auto Jump Reset",
+				"Automatically jumps for you when you get hit so you take less knockback (not good for crystal pvp)",
 				-1,
 				Category.COMBAT);
 		addSettings(chance);

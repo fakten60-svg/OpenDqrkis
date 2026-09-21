@@ -5,18 +5,17 @@ import xyz.dqrkis.mixin.MinecraftClientAccessor;
 import xyz.dqrkis.module.Category;
 import xyz.dqrkis.module.Module;
 import xyz.dqrkis.module.setting.NumberSetting;
-import xyz.dqrkis.utils.EncryptedString;
 import net.minecraft.item.BlockItem;
 
 public final class FastPlace extends Module implements TickListener {
-	private final NumberSetting delay = new NumberSetting(EncryptedString.of("Delay"), 0, 4, 0, 1)
-			.setDescription(EncryptedString.of("Ticks between placements"));
+	private final NumberSetting delay = new NumberSetting("Delay", 0, 4, 0, 1)
+			.setDescription("Ticks between placements");
 
 	private int placeIn;
 
 	public FastPlace() {
-		super(EncryptedString.of("Fast Place"),
-				EncryptedString.of("Removes the delay when holding right click with blocks"),
+		super("Fast Place",
+				"Removes the delay when holding right click with blocks",
 				-1,
 				Category.MISC);
 		addSettings(delay);
